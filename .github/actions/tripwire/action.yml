@@ -49,7 +49,14 @@ runs:
         result=$?
         set -e
         echo "exit_code=$result" >> "$GITHUB_OUTPUT"
+    - name: Annotate changed files
+      if: ${{ always() && steps.scan.outputs.exit_code != '2' }}
+      shell: bash
+      run: node "$GITHUB_ACTION_PATH/annotate.mjs" out.json
     - name: Upload SARIF
+      # Needs code scanning (public repositories, or private ones with GitHub Advanced Security). Where it is unavailable the upload fails;
+      # that must not change the check result, which comes from the scan itself (see "Preserve CLI status"). Annotations above work everywhere.
+      continue-on-error: true
       if: ${{ always() && steps.scan.outputs.exit_code != '2' }}
       uses: github/codeql-action/upload-sarif@e8e594e8799b6bc05d33c13d3d14e484b7b9cbc0 # v3.29.4
       with:
