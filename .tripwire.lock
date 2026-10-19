@@ -1,5 +1,13 @@
 {
   "version": 1,
   "tool": "Tripwire",
-  "entries": []
+  "entries": [
+    {
+      "kind": "mcp-server",
+      "file": ".mcp.json",
+      "key": "mcpServers.demo",
+      "sha256": "aae5909971f4c15bb28893e09f9ff19884c9578148b991864e9c45e95c6f9718",
+      "summary": "node server.js"
+    }
+  ]
 }
