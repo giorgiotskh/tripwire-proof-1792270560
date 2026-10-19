@@ -19,6 +19,10 @@ inputs:
     required: false
     default: base
     description: "base (default) reads .tripwire.json from the PR base revision; none ignores repository configuration entirely (--no-repo-config)"
+  report:
+    required: false
+    default: 'false'
+    description: Build and attach an HTML report as a workflow artifact
   github-token:
     required: false
     default: ${{ github.token }}
@@ -49,6 +53,27 @@ runs:
         result=$?
         set -e
         echo "exit_code=$result" >> "$GITHUB_OUTPUT"
+    - name: Verify lock against the PR base
+      shell: bash
+      env:
+        TRIPWIRE_BASE: ${{ inputs.base-sha }}
+      run: |
+        if git cat-file -e "$TRIPWIRE_BASE:.tripwire.lock" 2>/dev/null; then
+          node "$GITHUB_ACTION_PATH/../../../packages/cli/dist/tripwire.mjs" verify . --lock-from "$TRIPWIRE_BASE" --no-repo-config
+        else
+          echo "No lock at the base revision; lock check skipped."
+        fi
+    - name: Build report
+      if: ${{ always() && inputs.report == 'true' }}
+      shell: bash
+      run: node "$GITHUB_ACTION_PATH/../../../packages/cli/dist/tripwire.mjs" report . --format html --out tripwire-report.html --force
+    - name: Attach report
+      if: ${{ always() && inputs.report == 'true' }}
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      with:
+        name: tripwire-report
+        path: tripwire-report.html
+        if-no-files-found: error
     - name: Annotate changed files
       if: ${{ always() && steps.scan.outputs.exit_code != '2' }}
       shell: bash

@@ -4,7 +4,7 @@ const require = __cr(import.meta.url);
 
 // src/main.ts
 import { readFileSync as readFileSync7, writeFileSync as writeFileSync4 } from "node:fs";
-import { isAbsolute as isAbsolute3, join as join7, relative, resolve as resolve5, sep as sep2 } from "node:path";
+import { isAbsolute as isAbsolute4, join as join9, relative as relative2, resolve as resolve6, sep as sep2 } from "node:path";
 
 // ../core/src/discovery/reader.ts
 import { lstatSync, readFileSync, realpathSync } from "node:fs";
@@ -37,14 +37,14 @@ import { lstatSync as lstatSync2, readdirSync, readFileSync as readFileSync2 } f
 import { join } from "node:path";
 
 // ../../node_modules/.pnpm/jsonc-parser@3.3.1/node_modules/jsonc-parser/lib/esm/impl/scanner.js
-function createScanner(text, ignoreTrivia = false) {
-  const len = text.length;
+function createScanner(text2, ignoreTrivia = false) {
+  const len = text2.length;
   let pos = 0, value = "", tokenOffset = 0, token = 16, lineNumber = 0, lineStartOffset = 0, tokenLineStartOffset = 0, prevTokenLineStartOffset = 0, scanError = 0;
   function scanHexDigits(count, exact) {
     let digits = 0;
     let value2 = 0;
     while (digits < count || !exact) {
-      let ch = text.charCodeAt(pos);
+      let ch = text2.charCodeAt(pos);
       if (ch >= 48 && ch <= 57) {
         value2 = value2 * 16 + ch - 48;
       } else if (ch >= 65 && ch <= 70) {
@@ -71,35 +71,35 @@ function createScanner(text, ignoreTrivia = false) {
   }
   function scanNumber() {
     let start = pos;
-    if (text.charCodeAt(pos) === 48) {
+    if (text2.charCodeAt(pos) === 48) {
       pos++;
     } else {
       pos++;
-      while (pos < text.length && isDigit(text.charCodeAt(pos))) {
+      while (pos < text2.length && isDigit(text2.charCodeAt(pos))) {
         pos++;
       }
     }
-    if (pos < text.length && text.charCodeAt(pos) === 46) {
+    if (pos < text2.length && text2.charCodeAt(pos) === 46) {
       pos++;
-      if (pos < text.length && isDigit(text.charCodeAt(pos))) {
+      if (pos < text2.length && isDigit(text2.charCodeAt(pos))) {
         pos++;
-        while (pos < text.length && isDigit(text.charCodeAt(pos))) {
+        while (pos < text2.length && isDigit(text2.charCodeAt(pos))) {
           pos++;
         }
       } else {
         scanError = 3;
-        return text.substring(start, pos);
+        return text2.substring(start, pos);
       }
     }
     let end = pos;
-    if (pos < text.length && (text.charCodeAt(pos) === 69 || text.charCodeAt(pos) === 101)) {
+    if (pos < text2.length && (text2.charCodeAt(pos) === 69 || text2.charCodeAt(pos) === 101)) {
       pos++;
-      if (pos < text.length && text.charCodeAt(pos) === 43 || text.charCodeAt(pos) === 45) {
+      if (pos < text2.length && text2.charCodeAt(pos) === 43 || text2.charCodeAt(pos) === 45) {
         pos++;
       }
-      if (pos < text.length && isDigit(text.charCodeAt(pos))) {
+      if (pos < text2.length && isDigit(text2.charCodeAt(pos))) {
         pos++;
-        while (pos < text.length && isDigit(text.charCodeAt(pos))) {
+        while (pos < text2.length && isDigit(text2.charCodeAt(pos))) {
           pos++;
         }
         end = pos;
@@ -107,30 +107,30 @@ function createScanner(text, ignoreTrivia = false) {
         scanError = 3;
       }
     }
-    return text.substring(start, end);
+    return text2.substring(start, end);
   }
   function scanString() {
     let result = "", start = pos;
     while (true) {
       if (pos >= len) {
-        result += text.substring(start, pos);
+        result += text2.substring(start, pos);
         scanError = 2;
         break;
       }
-      const ch = text.charCodeAt(pos);
+      const ch = text2.charCodeAt(pos);
       if (ch === 34) {
-        result += text.substring(start, pos);
+        result += text2.substring(start, pos);
         pos++;
         break;
       }
       if (ch === 92) {
-        result += text.substring(start, pos);
+        result += text2.substring(start, pos);
         pos++;
         if (pos >= len) {
           scanError = 2;
           break;
         }
-        const ch2 = text.charCodeAt(pos++);
+        const ch2 = text2.charCodeAt(pos++);
         switch (ch2) {
           case 34:
             result += '"';
@@ -172,7 +172,7 @@ function createScanner(text, ignoreTrivia = false) {
       }
       if (ch >= 0 && ch <= 31) {
         if (isLineBreak(ch)) {
-          result += text.substring(start, pos);
+          result += text2.substring(start, pos);
           scanError = 2;
           break;
         } else {
@@ -193,19 +193,19 @@ function createScanner(text, ignoreTrivia = false) {
       tokenOffset = len;
       return token = 17;
     }
-    let code = text.charCodeAt(pos);
+    let code = text2.charCodeAt(pos);
     if (isWhiteSpace(code)) {
       do {
         pos++;
         value += String.fromCharCode(code);
-        code = text.charCodeAt(pos);
+        code = text2.charCodeAt(pos);
       } while (isWhiteSpace(code));
       return token = 15;
     }
     if (isLineBreak(code)) {
       pos++;
       value += String.fromCharCode(code);
-      if (code === 13 && text.charCodeAt(pos) === 10) {
+      if (code === 13 && text2.charCodeAt(pos) === 10) {
         pos++;
         value += "\n";
       }
@@ -241,31 +241,31 @@ function createScanner(text, ignoreTrivia = false) {
       // comments
       case 47:
         const start = pos - 1;
-        if (text.charCodeAt(pos + 1) === 47) {
+        if (text2.charCodeAt(pos + 1) === 47) {
           pos += 2;
           while (pos < len) {
-            if (isLineBreak(text.charCodeAt(pos))) {
+            if (isLineBreak(text2.charCodeAt(pos))) {
               break;
             }
             pos++;
           }
-          value = text.substring(start, pos);
+          value = text2.substring(start, pos);
           return token = 12;
         }
-        if (text.charCodeAt(pos + 1) === 42) {
+        if (text2.charCodeAt(pos + 1) === 42) {
           pos += 2;
           const safeLength = len - 1;
           let commentClosed = false;
           while (pos < safeLength) {
-            const ch = text.charCodeAt(pos);
-            if (ch === 42 && text.charCodeAt(pos + 1) === 47) {
+            const ch = text2.charCodeAt(pos);
+            if (ch === 42 && text2.charCodeAt(pos + 1) === 47) {
               pos += 2;
               commentClosed = true;
               break;
             }
             pos++;
             if (isLineBreak(ch)) {
-              if (ch === 13 && text.charCodeAt(pos) === 10) {
+              if (ch === 13 && text2.charCodeAt(pos) === 10) {
                 pos++;
               }
               lineNumber++;
@@ -276,7 +276,7 @@ function createScanner(text, ignoreTrivia = false) {
             pos++;
             scanError = 1;
           }
-          value = text.substring(start, pos);
+          value = text2.substring(start, pos);
           return token = 13;
         }
         value += String.fromCharCode(code);
@@ -286,7 +286,7 @@ function createScanner(text, ignoreTrivia = false) {
       case 45:
         value += String.fromCharCode(code);
         pos++;
-        if (pos === len || !isDigit(text.charCodeAt(pos))) {
+        if (pos === len || !isDigit(text2.charCodeAt(pos))) {
           return token = 16;
         }
       // found a minus, followed by a number so
@@ -308,10 +308,10 @@ function createScanner(text, ignoreTrivia = false) {
       default:
         while (pos < len && isUnknownContentCharacter(code)) {
           pos++;
-          code = text.charCodeAt(pos);
+          code = text2.charCodeAt(pos);
         }
         if (tokenOffset !== pos) {
-          value = text.substring(tokenOffset, pos);
+          value = text2.substring(tokenOffset, pos);
           switch (value) {
             case "true":
               return token = 8;
@@ -494,7 +494,7 @@ var ParseOptions;
     allowTrailingComma: false
   };
 })(ParseOptions || (ParseOptions = {}));
-function parse(text, errors = [], options = ParseOptions.DEFAULT) {
+function parse(text2, errors = [], options = ParseOptions.DEFAULT) {
   let currentProperty = null;
   let currentParent = [];
   const previousParents = [];
@@ -534,10 +534,10 @@ function parse(text, errors = [], options = ParseOptions.DEFAULT) {
       errors.push({ error, offset, length });
     }
   };
-  visit(text, visitor, options);
+  visit(text2, visitor, options);
   return currentParent[0];
 }
-function parseTree(text, errors = [], options = ParseOptions.DEFAULT) {
+function parseTree(text2, errors = [], options = ParseOptions.DEFAULT) {
   let currentParent = { type: "array", offset: -1, length: -1, children: [], parent: void 0 };
   function ensurePropertyComplete(endOffset) {
     if (currentParent.type === "property") {
@@ -588,7 +588,7 @@ function parseTree(text, errors = [], options = ParseOptions.DEFAULT) {
       errors.push({ error, offset, length });
     }
   };
-  visit(text, visitor, options);
+  visit(text2, visitor, options);
   const result = currentParent.children[0];
   if (result) {
     delete result.parent;
@@ -626,8 +626,8 @@ function findNodeAtLocation(root, path) {
   }
   return node;
 }
-function visit(text, visitor, options = ParseOptions.DEFAULT) {
-  const _scanner = createScanner(text, false);
+function visit(text2, visitor, options = ParseOptions.DEFAULT) {
+  const _scanner = createScanner(text2, false);
   const _jsonPath = [];
   let suppressedCallbacks = 0;
   function toNoArgVisit(visitFunction) {
@@ -1581,8 +1581,8 @@ function parseArray(str, ptr, depth) {
 }
 
 // ../../node_modules/.pnpm/smol-toml@1.3.1/node_modules/smol-toml/dist/parse.js
-function peekTable(key, table, meta, type) {
-  let t = table;
+function peekTable(key, table2, meta, type) {
+  let t = table2;
   let m = meta;
   let k;
   let hasOwn = false;
@@ -1708,9 +1708,9 @@ function parse3(toml, opts) {
 
 // ../core/src/parsers/positions.ts
 var LineIndex = class {
-  constructor(text) {
-    this.text = text;
-    for (let i = 0; i < text.length; i++) if (text.charCodeAt(i) === 10) this.starts.push(i + 1);
+  constructor(text2) {
+    this.text = text2;
+    for (let i = 0; i < text2.length; i++) if (text2.charCodeAt(i) === 10) this.starts.push(i + 1);
   }
   starts = [0];
   pos(offset) {
@@ -1740,16 +1740,16 @@ function depthOk(v, d = 0) {
   }
   return true;
 }
-function makeJsoncFile(path, kind, text) {
-  const idx = new LineIndex(text);
+function makeJsoncFile(path, kind, text2) {
+  const idx = new LineIndex(text2);
   const errors = [];
   let tree;
   let parsed;
   let parseError;
   let parseWarning;
   try {
-    parsed = parse2(text, errors, { allowTrailingComma: true });
-    tree = parseTree2(text, [], { allowTrailingComma: true });
+    parsed = parse2(text2, errors, { allowTrailingComma: true });
+    tree = parseTree2(text2, [], { allowTrailingComma: true });
     if (!depthOk(parsed)) {
       parsed = void 0;
       parseError = "nesting too deep";
@@ -1761,7 +1761,7 @@ function makeJsoncFile(path, kind, text) {
   return {
     path,
     kind,
-    text,
+    text: text2,
     parsed,
     parseError,
     parseWarning,
@@ -1774,12 +1774,12 @@ function makeJsoncFile(path, kind, text) {
     }
   };
 }
-function makeTomlFile(path, kind, text) {
-  const idx = new LineIndex(text);
+function makeTomlFile(path, kind, text2) {
+  const idx = new LineIndex(text2);
   let parsed;
   let parseError;
   try {
-    parsed = parse3(text);
+    parsed = parse3(text2);
     if (!depthOk(parsed)) {
       parsed = void 0;
       parseError = "nesting too deep";
@@ -1787,22 +1787,22 @@ function makeTomlFile(path, kind, text) {
   } catch (e) {
     parseError = String(e);
   }
-  const lines = text.split("\n");
+  const lines = text2.split("\n");
   return {
     path,
     kind,
-    text,
+    text: text2,
     parsed,
     parseError,
     locate(p) {
       const key = String(p[p.length - 1]);
-      const table = p.slice(0, -1).join(".");
-      let inTable = table === "";
+      const table2 = p.slice(0, -1).join(".");
+      let inTable = table2 === "";
       let offset = 0;
       for (const line of lines) {
         const t = line.trim();
         const h = /^\[\[?\s*([^\]]+?)\s*\]\]?\s*(#.*)?$/.exec(t);
-        if (h) inTable = h[1].replace(/["'\s]/g, "") === table;
+        if (h) inTable = h[1].replace(/["'\s]/g, "") === table2;
         else if (inTable && t.startsWith(key) && /^\s*=/.test(t.slice(key.length))) {
           return idx.range(offset, offset + line.replace(/\r$/, "").length);
         }
@@ -1814,8 +1814,8 @@ function makeTomlFile(path, kind, text) {
     }
   };
 }
-function makeTextFile(path, kind, text) {
-  return { path, kind, text, locate: () => void 0 };
+function makeTextFile(path, kind, text2) {
+  return { path, kind, text: text2, locate: () => void 0 };
 }
 var STRUCTURED = [
   "claude-settings",
@@ -1827,10 +1827,10 @@ var STRUCTURED = [
   "gemini-settings",
   "claude-desktop-config"
 ];
-function parseFile(path, kind, text) {
-  if (kind === "codex-config") return makeTomlFile(path, kind, text);
-  if (STRUCTURED.includes(kind)) return makeJsoncFile(path, kind, text);
-  return makeTextFile(path, kind, text);
+function parseFile(path, kind, text2) {
+  if (kind === "codex-config") return makeTomlFile(path, kind, text2);
+  if (STRUCTURED.includes(kind)) return makeJsoncFile(path, kind, text2);
+  return makeTextFile(path, kind, text2);
 }
 
 // ../core/src/discovery/patterns.ts
@@ -1866,7 +1866,7 @@ var SKIP_DIRS = /* @__PURE__ */ new Set(["node_modules", ".git", "dist", "build"
 // ../core/src/discovery/discover.ts
 var MAX_DEPTH2 = 12;
 function discover(root, opts = {}) {
-  const cap = (opts.maxFileSizeKb ?? 1024) * 1024;
+  const cap2 = (opts.maxFileSizeKb ?? 1024) * 1024;
   const maxFiles = opts.maxFiles ?? 2e3;
   const files = [];
   const skipped = [];
@@ -1900,7 +1900,7 @@ function discover(root, opts = {}) {
       } catch {
         continue;
       }
-      if (size > cap) {
+      if (size > cap2) {
         skipped.push({ path: relPath, reason: "too large" });
         continue;
       }
@@ -1930,7 +1930,7 @@ function userLevelCandidates(platform = process.platform) {
   ];
 }
 function discoverUserLevel(home, opts = {}) {
-  const cap = (opts.maxFileSizeKb ?? 1024) * 1024;
+  const cap2 = (opts.maxFileSizeKb ?? 1024) * 1024;
   const files = [];
   const skipped = [];
   for (const c of userLevelCandidates(opts.platform)) {
@@ -1939,7 +1939,7 @@ function discoverUserLevel(home, opts = {}) {
     try {
       const st = lstatSync2(abs);
       if (st.isSymbolicLink() || !st.isFile()) continue;
-      if (st.size > cap) {
+      if (st.size > cap2) {
         skipped.push({ path: label, reason: "too large" });
         continue;
       }
@@ -2066,7 +2066,7 @@ function decodeRun(cps, kinds) {
   }
   return void 0;
 }
-function findHidden(text) {
+function findHidden(text2) {
   const runs = [];
   let cur;
   let prev = -1;
@@ -2088,7 +2088,7 @@ function findHidden(text) {
     }
     cur = void 0;
   };
-  const chars = Array.from(text);
+  const chars = Array.from(text2);
   for (let i = 0; i < chars.length; i++) {
     const ch = chars[i];
     const cp = ch.codePointAt(0);
@@ -2217,9 +2217,9 @@ function runsRepoScript(normalized) {
   return false;
 }
 function analyzeCommand(raw) {
-  const text = raw.length > 8e3 ? raw.slice(0, 8e3) : raw;
-  const n = normalizeCmd(text);
-  const n2 = normalizeCmdStrip(text);
+  const text2 = raw.length > 8e3 ? raw.slice(0, 8e3) : raw;
+  const n = normalizeCmd(text2);
+  const n2 = normalizeCmdStrip(text2);
   const t = (re) => re.test(n) || re.test(n2);
   const network = t(NET);
   const pipeToShell = PIPE_SHELL.test(unalt(n)) || PIPE_SHELL.test(unalt(n2));
@@ -2335,17 +2335,17 @@ function removeNodeEdits(file, path) {
     const end = target.offset + target.length;
     let from = target.offset;
     let to = end;
-    const text = file.text;
+    const text2 = file.text;
     if (i + 1 < sibs.length) {
       let j2 = end;
-      while (j2 < text.length && /\s/.test(text[j2])) j2++;
-      if (text[j2] === ",") {
+      while (j2 < text2.length && /\s/.test(text2[j2])) j2++;
+      if (text2[j2] === ",") {
         let to2 = j2 + 1;
-        while (to2 < text.length && (text[to2] === " " || text[to2] === "	")) to2++;
+        while (to2 < text2.length && (text2[to2] === " " || text2[to2] === "	")) to2++;
         let ls = from;
-        while (ls > 0 && (text[ls - 1] === " " || text[ls - 1] === "	")) ls--;
-        const nl = text[to2] === "\r" && text[to2 + 1] === "\n" ? 2 : text[to2] === "\n" ? 1 : 0;
-        if ((ls === 0 || text[ls - 1] === "\n") && nl) {
+        while (ls > 0 && (text2[ls - 1] === " " || text2[ls - 1] === "	")) ls--;
+        const nl = text2[to2] === "\r" && text2[to2 + 1] === "\n" ? 2 : text2[to2] === "\n" ? 1 : 0;
+        if ((ls === 0 || text2[ls - 1] === "\n") && nl) {
           from = ls;
           to2 += nl;
         }
@@ -2357,11 +2357,11 @@ function removeNodeEdits(file, path) {
       from = sibs[i - 1].offset + sibs[i - 1].length;
     } else {
       let ls = from;
-      while (ls > 0 && (text[ls - 1] === " " || text[ls - 1] === "	")) ls--;
+      while (ls > 0 && (text2[ls - 1] === " " || text2[ls - 1] === "	")) ls--;
       let te = to;
-      while (te < text.length && (text[te] === " " || text[te] === "	")) te++;
-      const nl = text[te] === "\r" && text[te + 1] === "\n" ? 2 : text[te] === "\n" ? 1 : 0;
-      if ((ls === 0 || text[ls - 1] === "\n") && nl) {
+      while (te < text2.length && (text2[te] === " " || text2[te] === "	")) te++;
+      const nl = text2[te] === "\r" && text2[te + 1] === "\n" ? 2 : text2[te] === "\n" ? 1 : 0;
+      if ((ls === 0 || text2[ls - 1] === "\n") && nl) {
         from = ls;
         to = te + nl;
       }
@@ -2563,11 +2563,11 @@ var posixNormalize = (p) => {
 var dirOf = (p) => p.includes("/") ? p.slice(0, p.lastIndexOf("/")) : "";
 var PROJECT_VARS = /^(?:\$\{?(?:CLAUDE_PROJECT_DIR|CURSOR_PROJECT_DIR|PWD|workspaceFolder|workspaceRoot|GITHUB_WORKSPACE)\}?|%(?:CLAUDE_PROJECT_DIR|CD)%|\$\{(?:workspaceFolder|workspaceRoot)\})[\\/]*/i;
 var SCRIPT_DIR_VARS = /^(?:\$\{?[A-Za-z_][A-Za-z0-9_]*\}?|\$\(\s*dirname\s+["']?\$\{?(?:0|BASH_SOURCE(?:\[0\])?)\}?["']?\s*\)|\$\{BASH_SOURCE(?:\[0\])?%\/\*\}|__dirname|%~dp0|\$PSScriptRoot)[\\/]+/;
-function scriptRefs(text, scriptDir) {
-  text = executedSegments(text).join(" ; ");
+function scriptRefs(text2, scriptDir) {
+  text2 = executedSegments(text2).join(" ; ");
   const out = [];
-  const tokens = text.split(/[\s"'`(),=;|&<>{}\[\]]+/).filter(Boolean);
-  const joined = text.match(/(?:\$\{[A-Za-z_]+\}|\$\([^)]*\)|[^\s"'`(),=;|&<>\[\]])+/g) ?? tokens;
+  const tokens = text2.split(/[\s"'`(),=;|&<>{}\[\]]+/).filter(Boolean);
+  const joined = text2.match(/(?:\$\{[A-Za-z_]+\}|\$\([^)]*\)|[^\s"'`(),=;|&<>\[\]])+/g) ?? tokens;
   const seen = /* @__PURE__ */ new Set();
   const add = (p) => {
     if (p !== void 0 && p !== "" && !seen.has(p)) {
@@ -2598,10 +2598,10 @@ function scriptRefs(text, scriptDir) {
   }
   return out;
 }
-function jsImports(text, scriptDir) {
+function jsImports(text2, scriptDir) {
   const out = [];
   const re = /(?:require\(\s*|import\s*\(\s*|\bfrom\s+|\bimport\s+)["'](\.{1,2}\/[^"']+)["']/g;
-  for (const m of text.matchAll(re)) {
+  for (const m of text2.matchAll(re)) {
     const base = posixNormalize((scriptDir ? scriptDir + "/" : "") + m[1]);
     if (!base) continue;
     out.push(base);
@@ -2633,21 +2633,21 @@ function followScripts(command, ctx, baseDir = "") {
   if (!queue.length && refsCmd.length) chain.unreadable.push(refsCmd[0]);
   while (queue.length && chain.read.length < MAX_SCRIPTS) {
     const { path, depth } = queue.shift();
-    const text = ctx.readFile(path);
-    if (text === void 0 || text.includes("\0")) {
+    const text2 = ctx.readFile(path);
+    if (text2 === void 0 || text2.includes("\0")) {
       chain.unreadable.push(path);
       continue;
     }
     chain.read.push(path);
     const dir = dirOf(path);
-    const lines = text.split(/\r?\n/).slice(0, MAX_LINES);
+    const lines = text2.split(/\r?\n/).slice(0, MAX_LINES);
     const here = emptyFlags();
     const add = (signal, line, raw) => {
       if (chain.evidence.some((e) => e.signal === signal && e.path === path)) return;
       chain.evidence.push({ signal, path, line, snippet: redact2(raw.trim().slice(0, 140)) });
     };
     const isPy = /\.py$/i.test(path);
-    const usesProc = PROC_IMPORT.test(text);
+    const usesProc = PROC_IMPORT.test(text2);
     const infos = [];
     let inDoc = false;
     lines.forEach((raw, i) => {
@@ -2717,7 +2717,7 @@ function followScripts(command, ctx, baseDir = "") {
     if (depth < MAX_DEPTH3) {
       const next = /* @__PURE__ */ new Set();
       for (const l of lines) for (const r of scriptRefs(l.slice(0, MAX_LINE_LEN), dir)) next.add(r);
-      for (const r of jsImports(text, dir)) next.add(r);
+      for (const r of jsImports(text2, dir)) next.add(r);
       for (const r of next) {
         if (visited.has(r)) continue;
         if (ctx.readFile(r) !== void 0) {
@@ -3058,8 +3058,8 @@ var unquote = (s) => {
   const t = s.trim();
   return t.length >= 2 && (t[0] === '"' && t.at(-1) === '"' || t[0] === "'" && t.at(-1) === "'") ? t.slice(1, -1) : t;
 };
-function parseFrontmatter(text) {
-  const lines = text.replace(/^﻿/, "").split(/\r?\n/);
+function parseFrontmatter(text2) {
+  const lines = text2.replace(/^﻿/, "").split(/\r?\n/);
   if (lines[0]?.trim() !== "---") return void 0;
   let end = -1;
   for (let i = 1; i < lines.length && i < 400; i++) if (lines[i].trim() === "---") {
@@ -3129,8 +3129,8 @@ function pathAnchoredInterpreter(entry) {
   return !/[*?[\]{}]/.test(t.replace(/^\$\{?[A-Z_]+\}?\//, "").split("/")[0]);
 }
 var lineRange = (file, line) => {
-  const text = file.text.split(/\r?\n/)[line] ?? "";
-  return { startLine: line, startCol: 0, endLine: line, endCol: text.length };
+  const text2 = file.text.split(/\r?\n/)[line] ?? "";
+  return { startLine: line, startCol: 0, endLine: line, endCol: text2.length };
 };
 function hookCommands(k) {
   const out = [];
@@ -3140,9 +3140,9 @@ function hookCommands(k) {
   });
   return out;
 }
-function skillShellBlocks(text, fromLine) {
+function skillShellBlocks(text2, fromLine) {
   const out = [];
-  const lines = text.split(/\r?\n/);
+  const lines = text2.split(/\r?\n/);
   let fence;
   for (let i = fromLine; i < lines.length; i++) {
     const l = lines[i];
@@ -3297,17 +3297,17 @@ function printableText(b) {
 var finish = (out, range, sev2, conf, title, why, evidence, fix, path, file) => out.push(finding(M024, file, void 0, { severity: sev2, confidence: conf, range, jsonPath: [path], title, whyItMatters: why, evidence, fix }));
 var ag024 = defineRule(M024, INSTRUCTION_KINDS, (file) => {
   const out = [];
-  const text = file.text;
-  const idx = new LineIndex(text);
+  const text2 = file.text;
+  const idx = new LineIndex(text2);
   const claimed = [];
   const overlaps = (a, b) => claimed.some(([x, y]) => a < y && b > x);
   const claim = (a, b) => claimed.push([a, b]);
   DATA_URI_RE.lastIndex = 0;
   let m;
-  while (m = DATA_URI_RE.exec(text)) {
+  while (m = DATA_URI_RE.exec(text2)) {
     const start = m.index;
     let end = start + m[0].length;
-    while (end < text.length && /[A-Za-z0-9+/=%_.~-]/.test(text[end]) && end - start < 2e5) end++;
+    while (end < text2.length && /[A-Za-z0-9+/=%_.~-]/.test(text2[end]) && end - start < 2e5) end++;
     const payload = end - (start + m[0].length);
     if (payload < 100) continue;
     const mime = (m[1] ?? "text/plain").toLowerCase();
@@ -3321,29 +3321,29 @@ var ag024 = defineRule(M024, INSTRUCTION_KINDS, (file) => {
       image ? "medium" : "high",
       image ? `Embedded ${mime} data: URI` : `Embedded ${mime} data: URI (${payload} characters)`,
       image ? "An embedded image is invisible in a diff and models that read images can follow text drawn in it." : "Embedded data is not human-readable in review but is passed to the model as part of the file.",
-      clip(text.slice(start, end), 120),
+      clip(text2.slice(start, end), 120),
       "Remove the embedded data or reference a reviewed file instead.",
-      `data-uri:${mime}:${text.slice(start + m[0].length, start + m[0].length + 24)}`,
+      `data-uri:${mime}:${text2.slice(start + m[0].length, start + m[0].length + 24)}`,
       file
     );
   }
   for (const [re, kind, min] of [[HEX_RE, "hex", HEX_MIN], [B64_RE, "base64", B64_MIN]]) {
     re.lastIndex = 0;
-    while (m = re.exec(text)) {
+    while (m = re.exec(text2)) {
       const a = m.index, b = a + m[0].length;
       if (overlaps(a, b)) continue;
       if (kind === "base64" && (m[0].match(/\//g)?.length ?? 0) > m[0].length / 8 && !/[+=]/.test(m[0])) continue;
       if (m[0].length < min && !decodesToDirective(kind, m[0])) continue;
       claim(a, b);
-      report(out, file, idx, kind, text.slice(a, b), a, b);
+      report(out, file, idx, kind, text2.slice(a, b), a, b);
     }
   }
-  const lines = text.split(/\r?\n/);
+  const lines = text2.split(/\r?\n/);
   const starts = [];
   let off = 0;
   for (const l of lines) {
     starts.push(off);
-    off += l.length + (text[off + l.length] === "\r" ? 2 : 1);
+    off += l.length + (text2[off + l.length] === "\r" ? 2 : 1);
   }
   let i = 0;
   while (i < lines.length) {
@@ -3380,7 +3380,7 @@ var ag024 = defineRule(M024, INSTRUCTION_KINDS, (file) => {
     }
     i = Math.max(j2, i + 1);
   }
-  const lower = text.toLowerCase();
+  const lower = text2.toLowerCase();
   let pos = 0;
   while (pos < lower.length) {
     const s = lower.indexOf("<!--", pos);
@@ -3388,7 +3388,7 @@ var ag024 = defineRule(M024, INSTRUCTION_KINDS, (file) => {
     let e = lower.indexOf("-->", s + 4);
     const unterminated = e < 0;
     if (unterminated) e = Math.min(lower.length, s + 4 + 4e3);
-    const body = text.slice(s + 4, e);
+    const body = text2.slice(s + 4, e);
     pos = e + 3;
     if (body.trim().length < COMMENT_MIN) continue;
     const directive = DIRECTIVE.test(body);
@@ -3409,7 +3409,7 @@ var ag024 = defineRule(M024, INSTRUCTION_KINDS, (file) => {
   }
   const TITLE_RE = /\]\(\s*[^\s)]{0,2000}\s+"([^"\n]{1,2000})"\s*\)/g;
   TITLE_RE.lastIndex = 0;
-  while (m = TITLE_RE.exec(text)) {
+  while (m = TITLE_RE.exec(text2)) {
     const title = m[1];
     const directive = DIRECTIVE.test(title);
     if (title.length < TITLE_MIN && !directive) continue;
@@ -4025,9 +4025,9 @@ var PROP_SPREAD = new RegExp(
   "i"
 );
 var PROP_VERB = /\b(?:embed|creat|writ|add|append|modif|updat|insert|inject|plant|cop(?:y|ie)|install|plac|drop|persist|propagat|spread|replicat)\w*/i;
-function analyzeInstructionText(text) {
+function analyzeInstructionText(text2) {
   const out = [];
-  const lines = text.split(/\r?\n/);
+  const lines = text2.split(/\r?\n/);
   const reported = /* @__PURE__ */ new Set();
   for (let i = 0; i < lines.length; i++) {
     const win = (lines[i] + (i + 1 < lines.length ? " " + lines[i + 1] : "")).replace(/[ 	]+/g, " ");
@@ -4200,6 +4200,9 @@ var ag013 = defineRule(M013, MCP_KINDS, (file, ctx) => {
 });
 var mcpScriptRules = [ag013];
 
+// ../core/src/rules/pack-b/index.ts
+var packB = [];
+
 // ../core/src/rules/registry-rule.ts
 var M014 = {
   id: "AG-014",
@@ -4310,7 +4313,19 @@ var ag014 = defineRule(M014, [...SETTINGS_KINDS, ...MCP_KINDS, "pkg-registry-con
 var registryRules = [ag014];
 
 // ../core/src/rules/registry.ts
-var ALL_RULES = [...settingsRules, ...mcpRules, ...mcpScriptRules, ...registryRules, ...instructionRules, ...taskRules, ...blobRules, ...agentRules, ...intelRules];
+var ALL_RULES = [
+  ...settingsRules,
+  ...mcpRules,
+  ...mcpScriptRules,
+  ...registryRules,
+  ...instructionRules,
+  ...taskRules,
+  ...blobRules,
+  ...agentRules,
+  ...intelRules,
+  // Pack B is always experimental: forced here so a rule cannot forget the flag.
+  ...packB.map((r) => ({ ...r, experimental: true }))
+];
 
 // ../core/src/engine/engine.ts
 function findingKey(f) {
@@ -4353,17 +4368,17 @@ function scanFiles(files, opts = {}) {
         fix: "Fix the syntax errors so the file can be reviewed fully."
       });
     }
-    for (const rule of rules) {
-      if (!rule.appliesTo.includes(file.kind)) continue;
+    for (const rule2 of rules) {
+      if (!rule2.appliesTo.includes(file.kind)) continue;
       try {
-        all.push(...rule.run(file, ctx));
+        all.push(...rule2.run(file, ctx));
       } catch (e) {
         all.push({
           ruleId: "AG-000",
           severity: "info",
           confidence: "low",
           category: "execution",
-          title: `Rule ${rule.id} failed`,
+          title: `Rule ${rule2.id} failed`,
           file: file.path,
           range: ZERO_RANGE,
           whyItMatters: "A rule threw while scanning this file.",
@@ -4406,9 +4421,9 @@ function compareFindings(a, b) {
 // ../core/src/config.ts
 import { existsSync as existsSync2, readFileSync as readFileSync4 } from "node:fs";
 import { join as join3 } from "node:path";
-function parseConfig(text) {
+function parseConfig(text2) {
   try {
-    const v = parse2(text, [], { allowTrailingComma: true });
+    const v = parse2(text2, [], { allowTrailingComma: true });
     return v && typeof v === "object" && !Array.isArray(v) ? v : {};
   } catch {
     return {};
@@ -4465,10 +4480,10 @@ function createBaseline(findings) {
 function serializeBaseline(b) {
   return JSON.stringify(b, null, 2) + "\n";
 }
-function parseBaseline(text) {
+function parseBaseline(text2) {
   let raw;
   try {
-    raw = JSON.parse(text);
+    raw = JSON.parse(text2);
   } catch (e) {
     throw new BaselineError(`baseline is not valid JSON: ${e.message}`);
   }
@@ -4519,8 +4534,8 @@ function canonical(v) {
   return v;
 }
 var hashOf = (v) => createHash2("sha256").update(JSON.stringify(canonical(v))).digest("hex");
-function scrub(text) {
-  let t = text;
+function scrub(text2) {
+  let t = text2;
   for (const p of SECRET_PATTERNS) t = t.replace(new RegExp(p.re.source, p.re.flags.includes("g") ? p.re.flags : p.re.flags + "g"), "\u2039redacted\u203A");
   return t;
 }
@@ -4602,10 +4617,10 @@ function collectLockEntries(files) {
 }
 var createLock = (files) => ({ version: 1, tool: PRODUCT.name, entries: collectLockEntries(files) });
 var serializeLock = (l) => JSON.stringify(l, null, 2) + "\n";
-function parseLock(text) {
+function parseLock(text2) {
   let raw;
   try {
-    raw = JSON.parse(text);
+    raw = JSON.parse(text2);
   } catch (e) {
     throw new LockError(`lock is not valid JSON: ${e.message}`);
   }
@@ -5000,12 +5015,12 @@ function diffStates(base, head, opts = {}) {
     if (hf && baseCounterpart && INSTRUCTION2.has(hf.kind) && WINDOWED_RULES.has(h.ruleId)) {
       const lines = hf.text.split("\n").length;
       const window = withContext(addedLineIndexes(baseCounterpart.text, hf.text), contextLines, lines);
-      let touches = false;
+      let touches2 = false;
       for (let l = h.range.startLine; l <= h.range.endLine; l++) if (window.has(l)) {
-        touches = true;
+        touches2 = true;
         break;
       }
-      if (!touches) {
+      if (!touches2) {
         unchanged.push(h);
         continue;
       }
@@ -5379,21 +5394,24 @@ var GitRepo = class _GitRepo {
   commit(sha) {
     const o = this.readObject(sha);
     if (o.type !== "commit") throw new GitError("corrupt", `${sha} is a ${o.type}, not a commit`);
-    const text = o.data.toString("utf8");
-    const headEnd = text.indexOf("\n\n");
-    const head = headEnd < 0 ? text : text.slice(0, headEnd);
-    let tree = "", time = 0;
+    const text2 = o.data.toString("utf8");
+    const headEnd = text2.indexOf("\n\n");
+    const head = headEnd < 0 ? text2 : text2.slice(0, headEnd);
+    let tree = "", time = 0, author = "";
     const parents = [];
     for (const line of head.split("\n")) {
       if (line.startsWith("tree ")) tree = line.slice(5).trim();
       else if (line.startsWith("parent ")) parents.push(line.slice(7).trim());
-      else if (line.startsWith("committer ")) {
+      else if (line.startsWith("author ")) {
+        const m = /^author (.*?)\s*<[^>]*>/.exec(line);
+        author = (m ? m[1] : line.slice(7).replace(/\s*[<\d].*$/, "")).slice(0, 200);
+      } else if (line.startsWith("committer ")) {
         const m = /(\d+) [+-]\d{4}\s*$/.exec(line);
         if (m) time = Number(m[1]);
       }
     }
     if (!HEX40.test(tree)) throw new GitError("corrupt", `commit ${sha} has no tree`);
-    return { sha, tree, parents, time, subject: (headEnd < 0 ? "" : text.slice(headEnd + 2)).split("\n")[0] ?? "" };
+    return { sha, tree, parents, time, subject: (headEnd < 0 ? "" : text2.slice(headEnd + 2)).split("\n")[0] ?? "", author };
   }
   tree(sha) {
     const o = this.readObject(sha);
@@ -5442,13 +5460,13 @@ var GitRepo = class _GitRepo {
   }
   packedRefs() {
     const m = /* @__PURE__ */ new Map();
-    let text = "";
+    let text2 = "";
     try {
-      text = readFileSync5(join4(this.commonDir, "packed-refs"), "utf8");
+      text2 = readFileSync5(join4(this.commonDir, "packed-refs"), "utf8");
     } catch {
       return m;
     }
-    for (const l of text.split("\n")) {
+    for (const l of text2.split("\n")) {
       if (!l || l[0] === "#" || l[0] === "^") continue;
       const sp = l.indexOf(" ");
       if (sp === 40 && HEX40.test(l.slice(0, 40))) m.set(l.slice(41).trim(), l.slice(0, 40));
@@ -5602,7 +5620,7 @@ var TreeIndex = class {
   }
 };
 function snapshotCommit(repo, commit, label, opts = {}) {
-  const cap = (opts.maxFileSizeKb ?? 1024) * 1024;
+  const cap2 = (opts.maxFileSizeKb ?? 1024) * 1024;
   const c = repo.commit(commit);
   const index = new TreeIndex(repo, c.tree);
   const files = [];
@@ -5637,7 +5655,7 @@ function snapshotCommit(repo, commit, label, opts = {}) {
         }
         throw err;
       }
-      if (obj.data.length > cap) {
+      if (obj.data.length > cap2) {
         skipped.push({ path, reason: "too large" });
         continue;
       }
@@ -5712,9 +5730,9 @@ function diffAgainst(root, baseRev, opts = {}) {
     else if (opts.configFrom === "base") {
       config2 = {};
       for (const c of configFileCandidates()) {
-        const text = readBase(c.name);
-        if (text !== void 0) {
-          config2 = parseConfig(text);
+        const text2 = readBase(c.name);
+        if (text2 !== void 0) {
+          config2 = parseConfig(text2);
           configSource = { file: c.name, commit: compared };
           break;
         }
@@ -5725,6 +5743,28 @@ function diffAgainst(root, baseRev, opts = {}) {
     for (const f of opts.baseFiles ?? []) baseFiles[f] = readBase(f);
     const result = diffStates(baseSnap.state, headState, { config: config2, contextLines: opts.contextLines });
     return { result, baseRev, baseCommit, comparedCommit: compared, headCommit, mergeBaseUsed, notes, baseFiles, configSource, skipped: { base: baseSnap.skipped, head: headSkipped } };
+  } finally {
+    repo.close();
+  }
+}
+var REVISION_FILE_CAP = 4 * 1024 * 1024;
+function readFileAtRevision(root, rev, path, opts = {}) {
+  const repo = GitRepo.open(root);
+  try {
+    const notes = [];
+    const baseCommit = repo.resolveCommit(rev);
+    let commit = baseCommit;
+    if (opts.useMergeBase !== false) {
+      const tip = repo.resolveCommit(opts.headRev ?? "HEAD");
+      const mb = repo.mergeBase(baseCommit, tip);
+      if (mb) commit = mb;
+      else notes.push(`no common ancestor of ${rev} and ${opts.headRev ?? "HEAD"} is available (unrelated history or a shallow clone); read from ${rev} directly`);
+    }
+    const e = new TreeIndex(repo, repo.commit(commit).tree).lookup(path);
+    if (!e || !isRegular(e.mode)) return { commit, mergeBaseUsed: commit !== baseCommit, notes };
+    const o = repo.readObject(e.sha);
+    if (o.type !== "blob" || o.data.length > REVISION_FILE_CAP || looksBinary(o.data)) return { commit, mergeBaseUsed: commit !== baseCommit, notes };
+    return { text: o.data.toString("utf8"), commit, mergeBaseUsed: commit !== baseCommit, notes };
   } finally {
     repo.close();
   }
@@ -5916,6 +5956,527 @@ function toTextReport(findings, opts = {}) {
   return lines.join("\n");
 }
 
+// ../core/src/histreport/build.ts
+var emptyCounts = () => ({ critical: 0, high: 0, medium: 0, low: 0, info: 0 });
+var TREND_METHOD = "For each calendar month (UTC) in the window, the repository is scanned as it was at the last commit on or before the end of that month (for the current month: the latest commit), and open findings are counted by severity. 'Introduced' and 'resolved' count findings whose introducing or resolving commit date falls inside that month. Months before the first commit are left out.";
+function sortFindings(fs) {
+  const conf = { high: 0, medium: 1, low: 2 };
+  return [...fs].sort((a, b) => (a.status === b.status ? 0 : a.status === "open" ? -1 : 1) || sevRank(b.severity) - sevRank(a.severity) || conf[a.confidence] - conf[b.confidence] || (b.introducedIn?.date ?? "").localeCompare(a.introducedIn?.date ?? "") * (a.introducedIn && b.introducedIn ? 1 : 0) || (a.introducedIn ? 0 : 1) - (b.introducedIn ? 0 : 1) || a.repo.localeCompare(b.repo) || a.file.localeCompare(b.file) || a.range.startLine - b.range.startLine || a.ruleId.localeCompare(b.ruleId));
+}
+function summarize(findings, repos) {
+  const bySeverity = emptyCounts();
+  let resolved = 0;
+  const per = new Map(repos.map((r) => [r.name, { repo: r.name, open: 0, resolved: 0, bySeverity: emptyCounts() }]));
+  for (const f of findings) {
+    const p = per.get(f.repo);
+    if (f.status === "resolved") {
+      resolved++;
+      if (p) p.resolved++;
+      continue;
+    }
+    bySeverity[f.severity]++;
+    if (p) {
+      p.open++;
+      p.bySeverity[f.severity]++;
+    }
+  }
+  const open = SEVERITY_ORDER.reduce((n, s) => n + bySeverity[s], 0);
+  return { open, resolved, highCritical: bySeverity.high + bySeverity.critical, bySeverity, perRepo: [...per.values()] };
+}
+function assembleReport(i) {
+  const findings = sortFindings(i.findings);
+  return {
+    schemaVersion: 1,
+    meta: { tool: { name: PRODUCT.name, version: TOOL_VERSION }, generatedAt: i.now.toISOString(), demo: i.demo, options: i.options, repos: i.repos },
+    summary: summarize(findings, i.repos),
+    trend: { windowMonths: i.options.months, method: TREND_METHOD, months: i.months },
+    findings
+  };
+}
+
+// ../core/src/histreport/escape.ts
+var INVISIBLE = new RegExp(
+  "[\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u034F\\u061C\\u115F\\u1160\\u17B4\\u17B5\\u180B-\\u180F\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\u3164\\uFE00-\\uFE0F\\uFEFF\\uFFA0\\uFFF0-\\uFFFB\\u{E0000}-\\u{E01EF}]|[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])|(?<![\\uD800-\\uDBFF])[\\uDC00-\\uDFFF]",
+  "gu"
+);
+var hex = (cp) => `<U+${cp.toString(16).toUpperCase().padStart(4, "0")}>`;
+function visible(s) {
+  return String(s).replace(/[\r\n\t]+/g, " ").replace(INVISIBLE, (m) => hex(m.codePointAt(0)));
+}
+function clip3(s, max) {
+  const cps = Array.from(s);
+  return cps.length <= max ? s : cps.slice(0, max).join("") + ` ...[${cps.length - max} more characters]`;
+}
+var MAX_FIELD = 400;
+var SCHEMES = /\b(https?|ftps?|wss?|file|javascript|vbscript|data|blob|mailto|tel|about):/gi;
+function defang(s) {
+  return s.replace(SCHEMES, "$1[:]");
+}
+function text(s, max = MAX_FIELD) {
+  return defang(visible(clip3(String(s), max)));
+}
+var HTML = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "`": "&#96;" };
+function escapeHtml(s, max = MAX_FIELD) {
+  return text(s, max).replace(/[&<>"'`]/g, (c) => HTML[c]);
+}
+function mdCell(s, max = MAX_FIELD) {
+  return text(s, max).replace(/[\\|`*_{}\[\]<>#!~&]/g, (c) => "\\" + c);
+}
+
+// ../core/src/histreport/render.ts
+var COVERAGE_TEXT = "This report flags known risky patterns in the files that configure AI coding agents (agent settings, MCP server definitions, instruction files and tasks), using fixed rules, offline. It does not read your application source code, dependencies or build scripts, and it does not show that a repository is free of problems. Each finding is dated to the first-parent commit at which it appeared; commits that arrived through a merge are attributed to the merge, a renamed file starts a new finding, and a shallow or truncated history only gives 'on or before' dates. Monthly counts are computed by scanning the repository as it was at the end of each month with today's rules, so a rule added recently also counts findings from earlier months. Suppressions and size limits are read from the current version of the repository's configuration unless --no-repo-config is used.";
+var DEMO_TEXT = "DEMO DATA (synthetic)";
+var SEV_LABEL = { critical: "Critical", high: "High", medium: "Medium", low: "Low", info: "Info" };
+var SEV_DESC = [...SEVERITY_ORDER].reverse();
+var day = (iso) => iso.slice(0, 10);
+var plural = (n, one, many = one + "s") => `${n} ${n === 1 ? one : many}`;
+function renderJson(d) {
+  return JSON.stringify(d, null, 2) + "\n";
+}
+function origin(f) {
+  const i = f.introducedIn;
+  if (!i) return "n/a (no git history)";
+  let s = (i.exact ? "" : "on or before ") + i.commit;
+  if (i.subject) s += ` "${i.subject}"`;
+  if (i.author) s += ` by ${i.author}`;
+  return s;
+}
+var originDate = (f) => f.introducedIn ? day(f.introducedIn.date) + (f.introducedIn.exact ? "" : " or earlier") : "n/a";
+function resolvedAt(f) {
+  const r = f.resolvedIn;
+  if (!r) return "n/a";
+  let s = `${r.commit} (${day(r.date)})`;
+  if (r.subject) s += ` "${r.subject}"`;
+  if (r.author) s += ` by ${r.author}`;
+  return s;
+}
+var rule = (f) => `${f.ruleId}: ${f.title}`;
+var where = (f) => `${f.file}:${f.range.startLine}`;
+function summarySentence(d) {
+  const repos = d.meta.repos.length;
+  return `${plural(d.summary.open, "open finding")} across ${plural(repos, "repository", "repositories")}; ${d.summary.highCritical} high/critical; trend over the last ${plural(d.trend.windowMonths, "month")}.`;
+}
+var openFindings = (d) => d.findings.filter((f) => f.status === "open");
+var resolvedFindings = (d) => d.findings.filter((f) => f.status === "resolved");
+var trendRow = (t, c = t.open) => [t.month, c.critical, c.high, c.medium, c.low, c.info, t.highCritical, t.introduced, t.resolved];
+function mdTable(head, rows) {
+  const line = (cells) => `| ${cells.join(" | ")} |`;
+  return [line(head), line(head.map(() => "---")), ...rows.map((r) => line(r.map(String)))].join("\n");
+}
+function renderMarkdown(d) {
+  const out = [];
+  out.push(`# ${mdCell(d.meta.tool.name)} report`);
+  if (d.meta.demo) out.push(`> **${DEMO_TEXT}**`);
+  out.push(`Scan date: ${mdCell(day(d.meta.generatedAt))}`);
+  out.push("## Summary", mdCell(summarySentence(d)));
+  for (const r of d.meta.repos) for (const n of r.notes) out.push(`- ${mdCell(r.name)}: ${mdCell(n)}`);
+  out.push("## Trend");
+  out.push(d.trend.months.length ? mdTable(["Month", "Critical", "High", "Medium", "Low", "Info", "High+critical", "Introduced", "Resolved"], d.trend.months.map((t) => trendRow(t).map((c) => typeof c === "string" ? mdCell(c) : c))) : "No monthly history is available.");
+  out.push(mdCell(d.trend.method, 2e3));
+  out.push("## Counts by severity");
+  out.push(mdTable(["Severity", "Open"], SEV_DESC.map((s) => [SEV_LABEL[s], d.summary.bySeverity[s]])));
+  if (d.meta.repos.length > 1) {
+    out.push(mdTable(
+      ["Repository", "Open", "Critical", "High", "Medium", "Low", "Info", "Resolved"],
+      d.summary.perRepo.map((r) => [mdCell(r.repo), r.open, r.bySeverity.critical, r.bySeverity.high, r.bySeverity.medium, r.bySeverity.low, r.bySeverity.info, r.resolved])
+    ));
+  }
+  out.push("## Findings");
+  const open = openFindings(d);
+  if (!open.length) out.push("No open findings.");
+  for (const s of SEV_DESC) {
+    const fs = open.filter((f) => f.severity === s);
+    if (!fs.length) continue;
+    out.push(`### ${SEV_LABEL[s]}`);
+    out.push(mdTable(["Repo", "Rule", "File:line", "Commit", "Date", "Fix"], fs.map((f) => [mdCell(f.repo), mdCell(rule(f)), mdCell(where(f)), mdCell(origin(f)), mdCell(originDate(f)), mdCell(f.fix)])));
+  }
+  out.push("## Resolved this period");
+  const res = resolvedFindings(d);
+  out.push(res.length ? mdTable(["Repo", "Rule", "Severity", "File:line", "Introduced", "Resolved"], res.map((f) => [mdCell(f.repo), mdCell(rule(f)), SEV_LABEL[f.severity], mdCell(where(f)), mdCell(origin(f)), mdCell(resolvedAt(f))])) : "None.");
+  out.push("## What this report does and does not cover", mdCell(COVERAGE_TEXT, 4e3));
+  out.push("## Run details");
+  out.push(`- Tool: ${mdCell(d.meta.tool.name)} ${mdCell(d.meta.tool.version)}`, `- Generated: ${mdCell(d.meta.generatedAt)}`);
+  for (const r of d.meta.repos) out.push(`- ${mdCell(r.name)}: ${r.git ? `commits examined ${r.commitsExamined}, range ${mdCell(r.firstCommit ?? "n/a")}..${mdCell(r.headCommit ?? "n/a")}` : "no git history"}`);
+  if (d.meta.demo) out.push(`- ${DEMO_TEXT}`);
+  return out.join("\n\n") + "\n";
+}
+var CSS = `
+:root{color-scheme:light}
+body{font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:#111;background:#fff;margin:0 auto;padding:24px;max-width:1000px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:19px;margin:28px 0 8px;border-bottom:1px solid #999;padding-bottom:4px}h3{font-size:15px;margin:18px 0 6px}
+table{border-collapse:collapse;width:100%;table-layout:fixed;margin:6px 0 12px}
+th,td{border:1px solid #888;padding:4px 6px;text-align:left;vertical-align:top;overflow-wrap:anywhere;word-break:break-word}
+th{background:#eee}
+#demo-banner{border:3px solid #000;padding:8px 12px;font-weight:700;font-size:18px;margin:0 0 16px;text-align:center}
+.muted{color:#444}.note{font-size:12px}svg{max-width:100%;height:auto;border:1px solid #bbb;margin:6px 0}
+@media print{
+  @page{margin:14mm}
+  body{padding:0;max-width:none;font-size:11pt}
+  #findings,#resolved,#coverage{break-before:page}
+  tr,svg,h2,h3{break-inside:avoid}h2,h3{break-after:avoid}
+  thead{display:table-header-group}
+}`;
+function table(head, rows, rowAttrs) {
+  const th = head.map((c) => `<th scope="col">${c}</th>`).join("");
+  const body = rows.map((r, i) => `<tr${rowAttrs ? rowAttrs(i) : ""}>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("");
+  return `<table><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table>`;
+}
+function barChart(months) {
+  const W = 640, H = 220, L = 40, B = 30, T = 14, R = 10;
+  const max = Math.max(1, ...months.map((t) => t.highCritical));
+  const bw = (W - L - R) / months.length;
+  const bars = months.map((t, i) => {
+    const bh = (H - T - B) * t.highCritical / max;
+    const x = L + i * bw + bw * 0.15;
+    const y = H - B - bh;
+    return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw * 0.7).toFixed(1)}" height="${bh.toFixed(1)}" fill="#333"/><text x="${(x + bw * 0.35).toFixed(1)}" y="${(y - 3).toFixed(1)}" font-size="11" text-anchor="middle">${t.highCritical}</text><text x="${(x + bw * 0.35).toFixed(1)}" y="${H - 12}" font-size="10" text-anchor="middle">${escapeHtml(t.month.slice(2))}</text>`;
+  }).join("");
+  return `<svg role="img" aria-label="High and critical open findings at the end of each month" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><line x1="${L}" y1="${H - B}" x2="${W - R}" y2="${H - B}" stroke="#000"/><line x1="${L}" y1="${T}" x2="${L}" y2="${H - B}" stroke="#000"/><text x="${L - 4}" y="${T + 4}" font-size="10" text-anchor="end">${max}</text><text x="${L - 4}" y="${H - B}" font-size="10" text-anchor="end">0</text>${bars}</svg>`;
+}
+var DASH = { critical: "", high: "6 3", medium: "2 3", low: "8 3 2 3", info: "1 4" };
+function lineChart(months) {
+  const W = 640, H = 240, L = 40, B = 30, T = 14, R = 70;
+  const max = Math.max(1, ...months.flatMap((t) => SEV_DESC.map((s) => t.open[s])));
+  const step = months.length > 1 ? (W - L - R) / (months.length - 1) : 0;
+  const xy = (i, v) => [L + i * step, H - B - (H - T - B) * v / max];
+  const last = months[months.length - 1];
+  const labelY = /* @__PURE__ */ new Map();
+  let prev = -Infinity;
+  for (const s of [...SEV_DESC].sort((a, b) => xy(0, last.open[a])[1] - xy(0, last.open[b])[1] || SEV_DESC.indexOf(a) - SEV_DESC.indexOf(b))) {
+    const y = Math.max(xy(0, last.open[s])[1], prev + 13);
+    labelY.set(s, y);
+    prev = y;
+  }
+  const lines = SEV_DESC.map((s) => {
+    const pts = months.map((t, i) => xy(i, t.open[s]).map((n) => n.toFixed(1)).join(",")).join(" ");
+    const lx = xy(months.length - 1, 0)[0];
+    return `<polyline points="${pts}" fill="none" stroke="#000" stroke-width="1.6" stroke-dasharray="${DASH[s]}"/><text x="${(lx + 6).toFixed(1)}" y="${(labelY.get(s) + 4).toFixed(1)}" font-size="11">${SEV_LABEL[s]}</text>`;
+  }).join("");
+  const xl = months.map((t, i) => `<text x="${xy(i, 0)[0].toFixed(1)}" y="${H - 12}" font-size="10" text-anchor="middle">${escapeHtml(t.month.slice(2))}</text>`).join("");
+  return `<svg role="img" aria-label="Open findings by severity at the end of each month" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><line x1="${L}" y1="${H - B}" x2="${W - R}" y2="${H - B}" stroke="#000"/><line x1="${L}" y1="${T}" x2="${L}" y2="${H - B}" stroke="#000"/><text x="${L - 4}" y="${T + 4}" font-size="10" text-anchor="end">${max}</text><text x="${L - 4}" y="${H - B}" font-size="10" text-anchor="end">0</text>${lines}${xl}</svg>`;
+}
+function renderHtml(d) {
+  const name = escapeHtml(d.meta.tool.name);
+  const o = [];
+  o.push(
+    "<!doctype html>",
+    '<html lang="en"><head><meta charset="utf-8">',
+    `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:">`,
+    '<meta name="viewport" content="width=device-width, initial-scale=1">',
+    `<title>${name} report</title><style>${CSS}</style></head><body>`
+  );
+  if (d.meta.demo) o.push(`<div id="demo-banner">${DEMO_TEXT}</div>`);
+  o.push(`<header id="title"><h1>${name} report</h1><p class="muted">Scan date: ${escapeHtml(day(d.meta.generatedAt))}</p></header>`);
+  o.push(`<section id="summary"><h2>Summary</h2><p>${escapeHtml(summarySentence(d))}</p>`);
+  const notes = d.meta.repos.flatMap((r) => r.notes.map((n) => `<li>${escapeHtml(r.name)}: ${escapeHtml(n)}</li>`));
+  if (notes.length) o.push(`<ul class="note">${notes.join("")}</ul>`);
+  o.push("</section>");
+  o.push('<section id="trend"><h2>Trend</h2>');
+  if (d.trend.months.length) {
+    o.push("<h3>High and critical findings open at the end of each month</h3>", barChart(d.trend.months));
+    o.push("<h3>Open findings by severity</h3>", lineChart(d.trend.months));
+    o.push(table(
+      ["Month", "Critical", "High", "Medium", "Low", "Info", "High+critical", "Introduced", "Resolved"],
+      d.trend.months.map((t) => trendRow(t).map((c) => escapeHtml(String(c))))
+    ));
+  } else o.push("<p>No monthly history is available.</p>");
+  o.push(`<p class="note">${escapeHtml(d.trend.method, 2e3)}</p></section>`);
+  o.push('<section id="severity-counts"><h2>Counts by severity</h2>');
+  o.push(table(["Severity", "Open findings"], SEV_DESC.map((s) => [SEV_LABEL[s], String(d.summary.bySeverity[s])])));
+  if (d.meta.repos.length > 1) {
+    o.push(table(
+      ["Repository", "Open", "Critical", "High", "Medium", "Low", "Info", "Resolved"],
+      d.summary.perRepo.map((r) => [escapeHtml(r.repo), String(r.open), String(r.bySeverity.critical), String(r.bySeverity.high), String(r.bySeverity.medium), String(r.bySeverity.low), String(r.bySeverity.info), String(r.resolved)])
+    ));
+  }
+  o.push("</section>");
+  o.push('<section id="findings"><h2>Findings</h2>');
+  const open = openFindings(d);
+  if (!open.length) o.push("<p>No open findings.</p>");
+  for (const s of SEV_DESC) {
+    const fs = open.filter((f) => f.severity === s);
+    if (!fs.length) continue;
+    o.push(`<h3 data-severity="${s}">${SEV_LABEL[s]} (${fs.length})</h3>`);
+    o.push(table(
+      ["Repo", "Rule", "File:line", "Commit", "Date", "Fix"],
+      fs.map((f) => [escapeHtml(f.repo), escapeHtml(rule(f)), escapeHtml(where(f)), escapeHtml(origin(f)), escapeHtml(originDate(f)), escapeHtml(f.fix, 300)]),
+      () => ` class="finding" data-severity="${s}"`
+    ));
+  }
+  o.push("</section>");
+  o.push('<section id="resolved"><h2>Resolved this period</h2>');
+  const res = resolvedFindings(d);
+  o.push(res.length ? table(["Repo", "Rule", "Severity", "File:line", "Introduced", "Resolved"], res.map((f) => [escapeHtml(f.repo), escapeHtml(rule(f)), SEV_LABEL[f.severity], escapeHtml(where(f)), escapeHtml(origin(f)), escapeHtml(resolvedAt(f))])) : "<p>None.</p>");
+  o.push("</section>");
+  o.push(`<section id="coverage"><h2>What this report does and does not cover</h2><p>${escapeHtml(COVERAGE_TEXT, 4e3)}</p></section>`);
+  o.push('<footer id="footer"><h2>Run details</h2><ul class="note">');
+  o.push(`<li>Tool: ${name} ${escapeHtml(d.meta.tool.version)}</li><li>Generated: ${escapeHtml(d.meta.generatedAt)}</li>`);
+  for (const r of d.meta.repos) o.push(`<li>${escapeHtml(r.name)}: ${r.git ? `commits examined ${r.commitsExamined}, range ${escapeHtml(r.firstCommit ?? "n/a")}..${escapeHtml(r.headCommit ?? "n/a")}` : "no git history"}</li>`);
+  if (d.meta.demo) o.push(`<li><strong>${DEMO_TEXT}</strong></li>`);
+  o.push("</ul></footer></body></html>");
+  return o.join("\n") + "\n";
+}
+
+// ../core/src/histreport/history.ts
+import { existsSync as existsSync4 } from "node:fs";
+import { basename, join as join5 } from "node:path";
+var EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+/g;
+var short = (sha) => sha.slice(0, 8);
+var isoOf = (sec) => new Date(sec * 1e3).toISOString();
+var noEmails = (s) => s.replace(EMAIL, "<email removed>");
+var AUTH_HEADER2 = /\b(Bearer|Basic|Token)\s+[A-Za-z0-9._~+\/=-]{16,}/gi;
+var KEY_VALUE = /\b(api[_-]?key|access[_-]?token|auth[_-]?token|token|secret|passw(?:or)?d|passwd)(\s*[=:]\s*)(["']?)[^\s"'&]{8,}/gi;
+function redactSecrets(s) {
+  let out = s;
+  for (const p of SECRET_PATTERNS) out = out.replace(p.re, (m) => redact(m));
+  return out.replace(AUTH_HEADER2, "$1 [redacted]").replace(KEY_VALUE, "$1$2$3[redacted]");
+}
+var clean = (s, root) => {
+  let out = noEmails(redactSecrets(s));
+  for (const r of /* @__PURE__ */ new Set([root, root.split("\\").join("/")])) if (r.length > 3) out = out.split(r).join(".");
+  return out;
+};
+var cap = (s, n) => Array.from(s).slice(0, n).join("");
+function firstParentChain(repo, head, max) {
+  const out = [];
+  let shallow = false, truncated = false;
+  let cur = head;
+  while (cur) {
+    let c;
+    try {
+      c = repo.commit(cur);
+    } catch (e) {
+      if (e instanceof GitError && e.code === "missing-object") {
+        shallow = true;
+        break;
+      }
+      throw e;
+    }
+    out.push(c);
+    cur = c.parents[0];
+    if (cur && out.length >= max) {
+      truncated = true;
+      break;
+    }
+  }
+  out.reverse();
+  return { commits: out.map((c) => ({ sha: c.sha, short: short(c.sha), time: c.time, subject: c.subject, author: c.author, tree: c.tree })), shallow, truncated };
+}
+function touches(repo, a, b, watched, prefix = "", depth = 0) {
+  if (a === b || depth > 14) return false;
+  const left = new Map(repo.tree(a).map((e) => [e.name, e]));
+  const right = new Map(repo.tree(b).map((e) => [e.name, e]));
+  for (const name of /* @__PURE__ */ new Set([...left.keys(), ...right.keys()])) {
+    const l = left.get(name), r = right.get(name);
+    if (l && r && l.sha === r.sha && l.mode === r.mode) continue;
+    const path = prefix ? `${prefix}/${name}` : name;
+    const lDir = l?.mode === "40000", rDir = r?.mode === "40000";
+    if (lDir || rDir) {
+      if (SKIP_DIRS.has(name)) continue;
+      if (lDir && rDir) {
+        if (touches(repo, l.sha, r.sha, watched, path, depth + 1)) return true;
+        continue;
+      }
+      if (lDir && dirTouches(repo, l.sha, watched, path, depth + 1)) return true;
+      if (rDir && dirTouches(repo, r.sha, watched, path, depth + 1)) return true;
+      if (!lDir && l || !rDir && r) {
+        if (relevantPath(path, watched)) return true;
+      }
+      continue;
+    }
+    if (relevantPath(path, watched)) return true;
+  }
+  return false;
+}
+function dirTouches(repo, sha, watched, prefix, depth) {
+  if (depth > 14) return false;
+  for (const e of repo.tree(sha)) {
+    const path = `${prefix}/${e.name}`;
+    if (e.mode === "40000") {
+      if (!SKIP_DIRS.has(e.name) && dirTouches(repo, e.sha, watched, path, depth + 1)) return true;
+    } else if (relevantPath(path, watched)) return true;
+  }
+  return false;
+}
+var relevantPath = (path, watched) => !!classifyPath(path) || watched.has(path);
+function keyed(findings) {
+  const seen = /* @__PURE__ */ new Map();
+  const out = /* @__PURE__ */ new Map();
+  for (const f of findings) {
+    const base = identityKey(f);
+    const k = (seen.get(base) ?? 0) + 1;
+    seen.set(base, k);
+    out.set(`${base}#${k}`, f);
+  }
+  return out;
+}
+function loadRepoConfig(path, options, notes) {
+  if (!options.repoConfig) return {};
+  return loadConfig(path, { onNote: (m) => notes.push(clean(m, path)) });
+}
+function analyzePlain(input, options, notes) {
+  const config2 = loadRepoConfig(input.path, options, notes);
+  const { files } = discover(input.path, { maxFileSizeKb: config2.maxFileSizeKb });
+  const res = scanFiles(files, { root: input.path, config: config2, trackedFiles: readTrackedFiles(input.path), readFile: makeRepoReader(input.path) });
+  const plain = res.findings.filter((f) => sevRank(f.severity) >= sevRank(options.minSeverity));
+  return { meta: { name: input.name, git: false, shallow: false, truncated: false, commitsExamined: 0, firstCommit: null, headCommit: null, headDate: null, notes }, chain: [], spans: [], plain };
+}
+function analyzeRepo(input, options) {
+  const notes = [];
+  if (!existsSync4(join5(input.path, ".git"))) {
+    notes.push("no .git directory: commit attribution and the monthly trend are unavailable; the folder was scanned as it is");
+    return analyzePlain(input, options, notes);
+  }
+  let repo;
+  try {
+    repo = GitRepo.open(input.path);
+  } catch (e) {
+    if (!(e instanceof GitError)) throw e;
+    notes.push(`git history could not be read (${e.code}): commit attribution and the monthly trend are unavailable; the folder was scanned as it is`);
+    return analyzePlain(input, options, notes);
+  }
+  try {
+    let head;
+    try {
+      head = repo.resolveCommit("HEAD");
+    } catch (e) {
+      if (!(e instanceof GitError)) throw e;
+      notes.push("the repository has no commits yet: nothing to report");
+      return { meta: { name: input.name, git: true, shallow: false, truncated: false, commitsExamined: 0, firstCommit: null, headCommit: null, headDate: null, notes }, chain: [], spans: [] };
+    }
+    const config2 = loadRepoConfig(input.path, options, notes);
+    const { commits, shallow, truncated } = firstParentChain(repo, head, options.maxCommits);
+    if (shallow) notes.push(`shallow history: findings present in the oldest available commit ${commits[0].short} are dated 'on or before' that commit`);
+    if (truncated) notes.push(`history limited to the newest ${options.maxCommits} commits (--max-commits): findings present in commit ${commits[0].short} are dated 'on or before' that commit`);
+    const inexactStart = shallow || truncated;
+    const open = /* @__PURE__ */ new Map();
+    const spans = [];
+    let watched = /* @__PURE__ */ new Set();
+    for (let i = 0; i < commits.length; i++) {
+      const c = commits[i];
+      if (i > 0 && !touches(repo, commits[i - 1].tree, c.tree, watched)) continue;
+      const snap = snapshotCommit(repo, c.sha, c.short, { maxFileSizeKb: config2.maxFileSizeKb });
+      const requested = /* @__PURE__ */ new Set();
+      const base = snap.state.readFile;
+      const readFile = (p) => {
+        requested.add(p.replace(/\\/g, "/").replace(/^\.\//, ""));
+        return base?.(p);
+      };
+      const res = scanFiles(snap.state.files, { root: "", config: config2, trackedFiles: snap.state.tracked, readFile });
+      watched = requested;
+      const cur = keyed(res.findings.filter((f) => sevRank(f.severity) >= sevRank(options.minSeverity)));
+      for (const [k, f] of cur) {
+        const s = open.get(k);
+        if (s) s.finding = f;
+        else {
+          const ns = { finding: f, from: i, exact: !(i === 0 && inexactStart) };
+          open.set(k, ns);
+          spans.push(ns);
+        }
+      }
+      for (const [k, s] of open) if (!cur.has(k)) {
+        s.to = i;
+        open.delete(k);
+      }
+    }
+    const last = commits[commits.length - 1];
+    return {
+      meta: { name: input.name, git: true, shallow, truncated, commitsExamined: commits.length, firstCommit: commits[0].short, headCommit: last.short, headDate: isoOf(last.time), notes },
+      chain: commits,
+      spans
+    };
+  } finally {
+    repo.close();
+  }
+}
+var monthKey = (y, m) => `${y}-${String(m + 1).padStart(2, "0")}`;
+function windowMonths(now, n) {
+  const out = [];
+  const y0 = now.getUTCFullYear(), m0 = now.getUTCMonth();
+  for (let k = n - 1; k >= 0; k--) {
+    const idx = y0 * 12 + m0 - k;
+    const y = Math.floor(idx / 12), m = idx - y * 12;
+    out.push({ month: monthKey(y, m), startSec: Date.UTC(y, m, 1) / 1e3, endSec: Date.UTC(y, m + 1, 1) / 1e3 });
+  }
+  return out;
+}
+function commitRef(c, options) {
+  const r = { commit: c.short, date: isoOf(c.time) };
+  if (options.includeSubjects) r.subject = cap(clean(c.subject, ""), 80);
+  if (options.includeAuthors) r.author = cap(clean(c.author, ""), 100);
+  return r;
+}
+function toReportFinding(repo, root, s, chain, options, resolved) {
+  const f = s.finding;
+  const out = {
+    repo,
+    ruleId: f.ruleId,
+    title: clean(f.title, root),
+    severity: f.severity,
+    confidence: f.confidence,
+    file: f.file,
+    range: f.range,
+    evidence: clean(f.evidence, root),
+    fix: clean(f.fix, root),
+    status: resolved ? "resolved" : "open"
+  };
+  if (chain.length) {
+    out.introducedIn = { ...commitRef(chain[s.from], options), exact: s.exact };
+    if (resolved && s.to !== void 0) out.resolvedIn = commitRef(chain[s.to], options);
+  }
+  return out;
+}
+function buildReport(input) {
+  const { options, now } = input;
+  const analyses = input.repos.map((r) => ({ input: r, a: analyzeRepo(r, options) }));
+  const months = windowMonths(now, options.months);
+  const windowStart = months[0].startSec;
+  const findings = [];
+  for (const { input: r, a } of analyses) {
+    if (a.plain) {
+      for (const f of a.plain) findings.push({ repo: r.name, ruleId: f.ruleId, title: clean(f.title, r.path), severity: f.severity, confidence: f.confidence, file: f.file, range: f.range, evidence: clean(f.evidence, r.path), fix: clean(f.fix, r.path), status: "open" });
+      continue;
+    }
+    for (const s of a.spans) {
+      if (s.to === void 0) findings.push(toReportFinding(r.name, r.path, s, a.chain, options, false));
+      else if (a.chain[s.to].time >= windowStart) findings.push(toReportFinding(r.name, r.path, s, a.chain, options, true));
+    }
+  }
+  const firstTimes = analyses.filter((x) => x.a.chain.length).map((x) => x.a.chain[0].time);
+  const trend = [];
+  if (firstTimes.length) {
+    const firstAny = Math.min(...firstTimes);
+    const single = analyses.length === 1;
+    for (const w of months) {
+      if (firstAny >= w.endSec) continue;
+      const open = emptyCounts();
+      let introduced = 0, resolved = 0, asOf = null;
+      for (const { a } of analyses) {
+        if (!a.chain.length) continue;
+        let idx = a.chain.length - 1;
+        while (idx >= 0 && a.chain[idx].time >= w.endSec) idx--;
+        if (idx < 0) continue;
+        if (single) asOf = a.chain[idx].short;
+        for (const s of a.spans) {
+          if (s.from <= idx && (s.to === void 0 || idx < s.to)) open[s.finding.severity]++;
+          if (s.exact) {
+            const t = a.chain[s.from].time;
+            if (t >= w.startSec && t < w.endSec) introduced++;
+          }
+          if (s.to !== void 0) {
+            const t = a.chain[s.to].time;
+            if (t >= w.startSec && t < w.endSec) resolved++;
+          }
+        }
+      }
+      trend.push({ month: w.month, asOfCommit: asOf, open, highCritical: open.high + open.critical, introduced, resolved });
+    }
+  }
+  const repos = analyses.map((x) => x.a.meta);
+  if (!trend.length && !analyses.some((x) => x.a.meta.notes.length)) repos[0].notes.push("no commit history in the window: the monthly trend is empty");
+  return assembleReport({ repos, findings, months: trend, options, now, demo: input.demo });
+}
+
 // ../core/src/index.ts
 function scanDirectory(root, opts = {}) {
   const config2 = opts.config ?? loadConfig(root);
@@ -5930,7 +6491,7 @@ function scanDirectory(root, opts = {}) {
 }
 
 // src/args.ts
-var COMMANDS = ["scan", "diff", "lock", "verify", "baseline", "harden", "hook"];
+var COMMANDS = ["scan", "diff", "lock", "verify", "baseline", "harden", "hook", "report"];
 var UsageError = class extends Error {
 };
 var USAGE = `usage: tripwire <command> [args] [flags]
@@ -5939,20 +6500,51 @@ commands:
   scan <path>                  scan a directory for risky agent configuration
   diff <base> <head>           what <head> introduced or made worse relative to <base> (refs or SHAs, or WORKTREE)
   lock <path>                  write .tripwire.lock (hashes of MCP server definitions and hook commands)
-  verify <path>                report drift against the lock
+  verify <path>                report drift against the lock (--lock-from <rev>: take the lock from that revision, not the working tree)
   baseline create <path>       accept current findings; write .tripwire-baseline.json
   harden <path>                print a recommended safe settings template (--write to create it, with confirmation)
   hook install|uninstall       install/remove a user-run git post-checkout/post-merge hook that runs scan
+  report <path...>             report of findings tied to the commit that added them, with a monthly trend (html, json or md)
 
 flags:
   --sarif <file>  --json <file>  (use - for stdout)   --fail-on <critical|high|medium|low|info|none>  (default high)
   --min-confidence <low|medium|high>  --baseline <file>  --include-user-configs  --no-color  --repo <path>
   --no-repo-config  --no-merge-base (diff)  --write (harden)  --yes (non-interactive confirmation)  --version  --help
+report flags: --format <html|json|md>  --out <file>  --force  --months <1-24>  --max-commits <n>  --include-authors  --include-subjects
+  --repo-name <name>  --min-severity <sev>  --demo-label  --now <ISO-8601 UTC>   (--fail-on defaults to none for report)
 exit codes: 0 clean, 1 findings at/above threshold or drift, 2 tool error`;
-var VALUE_FLAGS = /* @__PURE__ */ new Set(["--sarif", "--json", "--fail-on", "--min-confidence", "--baseline", "--repo"]);
-var BOOL_FLAGS = /* @__PURE__ */ new Set(["--include-user-configs", "--no-color", "--no-merge-base", "--no-repo-config", "--write", "--yes", "--help", "--version", "-h", "-v"]);
+var VALUE_FLAGS = /* @__PURE__ */ new Set(["--sarif", "--json", "--fail-on", "--min-confidence", "--baseline", "--repo", "--lock-from", "--format", "--out", "--months", "--max-commits", "--repo-name", "--min-severity", "--now"]);
+var REPORT_ONLY = /* @__PURE__ */ new Set(["--format", "--out", "--months", "--max-commits", "--repo-name", "--min-severity", "--now", "--force", "--include-authors", "--include-subjects", "--demo-label"]);
+var BOOL_FLAGS = /* @__PURE__ */ new Set(["--include-user-configs", "--no-color", "--no-merge-base", "--no-repo-config", "--write", "--yes", "--force", "--include-authors", "--include-subjects", "--demo-label", "--help", "--version", "-h", "-v"]);
+function intFlag(flag, v, min, max) {
+  if (!/^\d+$/.test(v) || Number(v) < min || Number(v) > max) throw new UsageError(`invalid ${flag} "${v}" (use an integer from ${min} to ${max})`);
+  return Number(v);
+}
 function parseArgs(argv) {
-  const out = { pos: [], failOn: "high", minConfidence: "low", includeUserConfigs: false, noColor: false, noMergeBase: false, noRepoConfig: false, write: false, yes: false, help: false, version: false };
+  const out = {
+    pos: [],
+    failOn: "high",
+    minConfidence: "low",
+    includeUserConfigs: false,
+    noColor: false,
+    noMergeBase: false,
+    noRepoConfig: false,
+    write: false,
+    yes: false,
+    help: false,
+    version: false,
+    failOnGiven: false,
+    format: "html",
+    force: false,
+    months: 6,
+    maxCommits: 2e3,
+    includeAuthors: false,
+    includeSubjects: false,
+    minSeverity: "low",
+    demoLabel: false
+  };
+  const usedReportOnly = [];
+  let minConfidenceGiven = false;
   const raw = [];
   for (let i = 0; i < argv.length; i++) {
     let a = argv[i];
@@ -5961,6 +6553,8 @@ function parseArgs(argv) {
       inline = a.slice(a.indexOf("=") + 1);
       a = a.slice(0, a.indexOf("="));
     }
+    if (REPORT_ONLY.has(a)) usedReportOnly.push(a);
+    if (a === "--min-confidence") minConfidenceGiven = true;
     if (VALUE_FLAGS.has(a)) {
       const v = inline ?? argv[++i];
       if (v === void 0 || inline === void 0 && v.startsWith("--") && v.length > 2) throw new UsageError(`missing value for ${a}`);
@@ -5977,9 +6571,37 @@ function parseArgs(argv) {
         case "--repo":
           out.repo = v;
           break;
+        case "--lock-from":
+          out.lockFrom = v;
+          break;
         case "--fail-on":
           if (v !== "none" && !SEVERITY_ORDER.includes(v)) throw new UsageError(`invalid --fail-on "${v}" (use critical, high, medium, low, info or none)`);
           out.failOn = v;
+          out.failOnGiven = true;
+          break;
+        case "--format":
+          if (v !== "html" && v !== "json" && v !== "md") throw new UsageError(`invalid --format "${v}" (use html, json or md)`);
+          out.format = v;
+          break;
+        case "--out":
+          out.out = v;
+          break;
+        case "--months":
+          out.months = intFlag(a, v, 1, 24);
+          break;
+        case "--max-commits":
+          out.maxCommits = intFlag(a, v, 1, 1e6);
+          break;
+        case "--repo-name":
+          out.repoName = v;
+          break;
+        case "--min-severity":
+          if (!SEVERITY_ORDER.includes(v)) throw new UsageError(`invalid --min-severity "${v}" (use critical, high, medium, low or info)`);
+          out.minSeverity = v;
+          break;
+        case "--now":
+          if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(v) || Number.isNaN(Date.parse(v))) throw new UsageError(`invalid --now "${v}" (use an ISO-8601 UTC time such as 2026-10-20T00:00:00Z)`);
+          out.now = v;
           break;
         case "--min-confidence":
           if (!["low", "medium", "high"].includes(v)) throw new UsageError(`invalid --min-confidence "${v}" (use low, medium or high)`);
@@ -6006,6 +6628,18 @@ function parseArgs(argv) {
           break;
         case "--yes":
           out.yes = true;
+          break;
+        case "--force":
+          out.force = true;
+          break;
+        case "--include-authors":
+          out.includeAuthors = true;
+          break;
+        case "--include-subjects":
+          out.includeSubjects = true;
+          break;
+        case "--demo-label":
+          out.demoLabel = true;
           break;
         case "--help":
         case "-h":
@@ -6039,16 +6673,23 @@ function parseArgs(argv) {
     case "hook":
       need((raw[0] === "install" || raw[0] === "uninstall") && raw.length <= 2, "hook needs install or uninstall [path]");
       break;
+    case "report":
+      need(raw.length >= 1, "report needs at least one <path>");
+      need(!(out.repoName !== void 0 && raw.length > 1), "--repo-name needs exactly one <path>");
+      need(out.sarif === void 0 && out.json === void 0 && out.baseline === void 0 && !minConfidenceGiven, "report does not take --sarif, --json, --baseline or --min-confidence (use --format and --out)");
+      break;
     default:
       need(raw.length <= 1, `${out.command} takes at most one <path>`);
   }
+  if (out.lockFrom !== void 0 && out.command !== "verify") throw new UsageError("--lock-from is only valid with verify");
+  if (out.command !== "report" && usedReportOnly.length) throw new UsageError(`${usedReportOnly[0]} is only valid with report`);
   if (out.sarif === "-" && out.json === "-") throw new UsageError("--sarif and --json cannot both write to stdout");
   return out;
 }
 
 // src/hook.ts
-import { chmodSync, existsSync as existsSync4, lstatSync as lstatSync5, mkdirSync, readFileSync as readFileSync6, unlinkSync, writeFileSync } from "node:fs";
-import { dirname as dirname2, isAbsolute as isAbsolute2, join as join5, resolve as resolve3 } from "node:path";
+import { chmodSync, existsSync as existsSync5, lstatSync as lstatSync5, mkdirSync, readFileSync as readFileSync6, unlinkSync, writeFileSync } from "node:fs";
+import { dirname as dirname2, isAbsolute as isAbsolute2, join as join6, resolve as resolve3 } from "node:path";
 var HOOK_NAMES = ["post-checkout", "post-merge"];
 var MARKER = `# ${PRODUCT.id.toUpperCase()}-MANAGED-HOOK v1`;
 var HookRefusal = class extends Error {
@@ -6061,7 +6702,7 @@ var readText = (p) => {
   }
 };
 function findGitDirs(root) {
-  const dotGit = join5(root, ".git");
+  const dotGit = join6(root, ".git");
   let st;
   try {
     st = lstatSync5(dotGit);
@@ -6077,13 +6718,13 @@ function findGitDirs(root) {
     gitDir = resolve3(root, m[1]);
   }
   let commonDir = gitDir;
-  const common = readText(join5(gitDir, "commondir"))?.trim();
+  const common = readText(join6(gitDir, "commondir"))?.trim();
   if (common) commonDir = resolve3(gitDir, common);
-  return { gitDir, commonDir, hooksDir: join5(commonDir, "hooks") };
+  return { gitDir, commonDir, hooksDir: join6(commonDir, "hooks") };
 }
-function configSetsHooksPath(text) {
+function configSetsHooksPath(text2) {
   let inCore = false;
-  for (const raw of text.split(/\r?\n/)) {
+  for (const raw of text2.split(/\r?\n/)) {
     const line = raw.trim();
     const sec = /^\[\s*([A-Za-z0-9.-]+)(?:\s+"[^"]*")?\s*\]/.exec(line);
     if (sec) {
@@ -6096,10 +6737,10 @@ function configSetsHooksPath(text) {
   }
   return false;
 }
-function includePaths(text, baseDir, home) {
+function includePaths(text2, baseDir, home) {
   const out = [];
   let inInclude = false;
-  for (const raw of text.split(/\r?\n/)) {
+  for (const raw of text2.split(/\r?\n/)) {
     const line = raw.trim();
     const sec = /^\[\s*(include|includeIf)\b/i.exec(line);
     if (sec) {
@@ -6113,7 +6754,7 @@ function includePaths(text, baseDir, home) {
     const m = inInclude ? /^path\s*=\s*(.+)$/i.exec(line) : null;
     if (m) {
       let p = m[1].trim().replace(/^"|"$/g, "");
-      if (p.startsWith("~/") && home) p = join5(home, p.slice(2));
+      if (p.startsWith("~/") && home) p = join6(home, p.slice(2));
       out.push(isAbsolute2(p) ? p : resolve3(baseDir, p));
     }
   }
@@ -6124,24 +6765,24 @@ function findHooksPathRedirect(dirs, env, home) {
   const check = (file, depth) => {
     if (seen.has(file) || depth > 3) return void 0;
     seen.add(file);
-    const text = readText(file);
-    if (text === void 0) return void 0;
-    if (configSetsHooksPath(text)) return file;
-    for (const inc of includePaths(text, dirname2(file), home)) {
+    const text2 = readText(file);
+    if (text2 === void 0) return void 0;
+    if (configSetsHooksPath(text2)) return file;
+    for (const inc of includePaths(text2, dirname2(file), home)) {
       const r = check(inc, depth + 1);
       if (r) return r;
     }
     return void 0;
   };
-  const xdg = env.XDG_CONFIG_HOME || (home ? join5(home, ".config") : "");
+  const xdg = env.XDG_CONFIG_HOME || (home ? join6(home, ".config") : "");
   const candidates = [
-    join5(dirs.commonDir, "config"),
-    join5(dirs.gitDir, "config"),
-    join5(dirs.gitDir, "config.worktree"),
-    ...home ? [join5(home, ".gitconfig")] : [],
-    ...xdg ? [join5(xdg, "git", "config")] : [],
+    join6(dirs.commonDir, "config"),
+    join6(dirs.gitDir, "config"),
+    join6(dirs.gitDir, "config.worktree"),
+    ...home ? [join6(home, ".gitconfig")] : [],
+    ...xdg ? [join6(xdg, "git", "config")] : [],
     "/etc/gitconfig",
-    ...env.ProgramFiles ? [join5(env.ProgramFiles, "Git", "etc", "gitconfig")] : []
+    ...env.ProgramFiles ? [join6(env.ProgramFiles, "Git", "etc", "gitconfig")] : []
   ];
   for (const c of candidates) {
     const r = check(c, 0);
@@ -6178,21 +6819,21 @@ function hookState(file) {
     return "absent";
   }
   if (st.isSymbolicLink()) return "symlink";
-  const text = readText(file) ?? "";
-  return text.includes(MARKER) ? "ours" : "foreign";
+  const text2 = readText(file) ?? "";
+  return text2.includes(MARKER) ? "ours" : "foreign";
 }
 function planInstall(root, env, home) {
   const dirs = findGitDirs(root);
   const redirect = findHooksPathRedirect(dirs, env, home);
   if (redirect) throw new HookRefusal(`git configuration sets core.hooksPath (${redirect}); hooks run from a redirected directory, which may be shared or controlled by someone else. Refusing to install.`);
-  if (existsSync4(dirs.hooksDir)) {
+  if (existsSync5(dirs.hooksDir)) {
     const st = lstatSync5(dirs.hooksDir);
     if (st.isSymbolicLink()) throw new HookRefusal("the hooks directory is a symbolic link; refusing to write through it");
     if (!st.isDirectory()) throw new HookRefusal("the hooks path exists and is not a directory");
   }
   const actions = [];
   for (const name of HOOK_NAMES) {
-    const file = join5(dirs.hooksDir, name);
+    const file = join6(dirs.hooksDir, name);
     const state = hookState(file);
     if (state === "foreign") throw new HookRefusal(`${name} already exists and was not created by ${PRODUCT.name}; it is never overwritten. Add a line to it by hand that runs: ${PRODUCT.id} scan .`);
     if (state === "symlink") throw new HookRefusal(`${name} is a symbolic link; refusing to replace it`);
@@ -6202,9 +6843,9 @@ function planInstall(root, env, home) {
 }
 function applyInstall(plan, selfPath, repoRoot2) {
   const scripts = plan.actions.map((a) => ({ a, text: hookScript(a.name, selfPath, repoRoot2) }));
-  if (!existsSync4(plan.dirs.hooksDir)) mkdirSync(plan.dirs.hooksDir, { recursive: true });
-  for (const { a, text } of scripts) {
-    writeFileSync(a.file, text, a.kind === "create" ? { flag: "wx", mode: 493 } : { mode: 493 });
+  if (!existsSync5(plan.dirs.hooksDir)) mkdirSync(plan.dirs.hooksDir, { recursive: true });
+  for (const { a, text: text2 } of scripts) {
+    writeFileSync(a.file, text2, a.kind === "create" ? { flag: "wx", mode: 493 } : { mode: 493 });
     try {
       chmodSync(a.file, 493);
     } catch {
@@ -6215,7 +6856,7 @@ function uninstall(root) {
   const dirs = findGitDirs(root);
   const res = { removed: [], left: [], absent: [] };
   for (const name of HOOK_NAMES) {
-    const file = join5(dirs.hooksDir, name);
+    const file = join6(dirs.hooksDir, name);
     const state = hookState(file);
     if (state === "ours") {
       unlinkSync(file);
@@ -6228,7 +6869,7 @@ function uninstall(root) {
 
 // src/harden.ts
 import { lstatSync as lstatSync6, mkdirSync as mkdirSync2, writeFileSync as writeFileSync2 } from "node:fs";
-import { join as join6 } from "node:path";
+import { join as join7 } from "node:path";
 var SECRET_DENY_RULES = [
   "Read(./.env)",
   "Read(./.env.*)",
@@ -6292,8 +6933,8 @@ function hardenText() {
   ].join("\n");
 }
 function writeProjectTemplate(root) {
-  const dir = join6(root, ".claude");
-  const file = join6(root, PROJECT_FILE);
+  const dir = join7(root, ".claude");
+  const file = join7(root, PROJECT_FILE);
   try {
     let st = void 0;
     try {
@@ -6337,11 +6978,11 @@ function processIO() {
     },
     stdoutIsTTY: !!process.stdout.isTTY,
     canPrompt,
-    ask: (q) => new Promise((resolve6) => {
+    ask: (q) => new Promise((resolve7) => {
       const rl = createInterface({ input: process.stdin, output: process.stderr });
       rl.question(q + " [y/N] ", (ans) => {
         rl.close();
-        resolve6(/^y(es)?$/i.test(ans.trim()));
+        resolve7(/^y(es)?$/i.test(ans.trim()));
       });
     })
   };
@@ -6351,6 +6992,10 @@ async function confirm(io, yes, question) {
   if (!io.canPrompt) return false;
   return io.ask(question);
 }
+
+// src/reportCmd.ts
+import { closeSync as closeSync2, lstatSync as lstatSync7, openSync as openSync2, realpathSync as realpathSync2, renameSync, unlinkSync as unlinkSync2, writeSync } from "node:fs";
+import { basename as basename2, dirname as dirname3, isAbsolute as isAbsolute3, join as join8, relative, resolve as resolve5 } from "node:path";
 
 // src/report.ts
 import { statSync, writeFileSync as writeFileSync3 } from "node:fs";
@@ -6406,13 +7051,13 @@ function buildSarif(o) {
   log.runs[0].properties = { suppressedByBaseline: o.suppressedByBaseline };
   return log;
 }
-function writeTarget(io, target, text) {
+function writeTarget(io, target, text2) {
   if (target === "-") {
-    io.stdout(text);
+    io.stdout(text2);
     return true;
   }
   try {
-    writeFileSync3(resolve4(io.cwd, target), text);
+    writeFileSync3(resolve4(io.cwd, target), text2);
   } catch (e) {
     throw new CliError(`cannot write ${target}: ${e.message}`);
   }
@@ -6433,6 +7078,113 @@ function finish2(io, a, o) {
   return failed ? 1 : 0;
 }
 
+// src/reportCmd.ts
+var EXT = { html: "html", json: "json", md: "md" };
+var norm4 = (p) => process.platform === "win32" ? p.toLowerCase() : p;
+var inside = (root, p) => {
+  const rel = relative(norm4(root), norm4(p));
+  return rel === "" || !rel.startsWith("..") && !isAbsolute3(rel);
+};
+function safeOutPath(io, out, force) {
+  const cwdReal = realpathSync2(io.cwd);
+  const target = resolve5(io.cwd, out);
+  if (!inside(resolve5(io.cwd), target)) throw new CliError(`refusing --out ${out}: it is outside the current folder`);
+  let parentReal;
+  try {
+    parentReal = realpathSync2(dirname3(target));
+  } catch {
+    throw new CliError(`cannot write ${out}: the folder does not exist`);
+  }
+  if (!inside(cwdReal, parentReal)) throw new CliError(`refusing --out ${out}: its folder resolves outside the current folder (symbolic link or junction)`);
+  const real = join8(parentReal, basename2(target));
+  let st;
+  try {
+    st = lstatSync7(real);
+  } catch {
+    return real;
+  }
+  if (st.isSymbolicLink()) {
+    let dest;
+    try {
+      dest = realpathSync2(real);
+    } catch {
+      throw new CliError(`refusing --out ${out}: it is a broken symbolic link`);
+    }
+    if (!inside(cwdReal, dest)) throw new CliError(`refusing --out ${out}: it is a symbolic link that leads outside the current folder`);
+  }
+  if (st.isDirectory()) throw new CliError(`cannot write ${out}: it is a folder`);
+  if (!force) throw new CliError(`${out} already exists (use --force to overwrite)`);
+  return real;
+}
+function writeAtomic(path, data) {
+  const tmp = `${path}.tmp-${process.pid}`;
+  let fd;
+  try {
+    fd = openSync2(tmp, "wx");
+    writeSync(fd, data);
+    closeSync2(fd);
+    fd = void 0;
+    renameSync(tmp, path);
+  } catch (e) {
+    if (fd !== void 0) try {
+      closeSync2(fd);
+    } catch {
+    }
+    try {
+      unlinkSync2(tmp);
+    } catch {
+    }
+    throw new CliError(`cannot write ${basename2(path)}: ${e.message}`);
+  }
+}
+function displayNames(a, roots) {
+  if (a.repoName !== void 0) return [a.repoName];
+  const seen = /* @__PURE__ */ new Map();
+  return roots.map((r) => {
+    const base = basename2(r) || "repository";
+    const n = (seen.get(base) ?? 0) + 1;
+    seen.set(base, n);
+    return n === 1 ? base : `${base} (${n})`;
+  });
+}
+function reportOptions(a) {
+  return {
+    months: a.months,
+    maxCommits: a.maxCommits,
+    includeAuthors: a.includeAuthors,
+    includeSubjects: a.includeSubjects,
+    minSeverity: a.minSeverity,
+    failOn: a.failOn,
+    repoConfig: !a.noRepoConfig
+  };
+}
+async function cmdReport(io, a) {
+  const roots = a.pos.map((p) => requireDir(io, p, "path"));
+  const options = reportOptions({ ...a, failOn: a.failOnGiven ? a.failOn : "none" });
+  const outTarget = a.out === "-" ? void 0 : safeOutPath(io, a.out ?? `${PRODUCT.id}-report.${EXT[a.format]}`, a.force);
+  const names2 = displayNames(a, roots);
+  const now = a.now ? new Date(a.now) : /* @__PURE__ */ new Date();
+  let data;
+  try {
+    data = buildReport({ repos: roots.map((r, i) => ({ path: r, name: names2[i] })), options, now, demo: a.demoLabel });
+  } catch (e) {
+    if (e instanceof GitError) throw new CliError(e.message);
+    throw e;
+  }
+  const body = a.format === "json" ? renderJson(data) : a.format === "md" ? renderMarkdown(data) : renderHtml(data);
+  let toStderr = false;
+  if (outTarget === void 0) {
+    io.stdout(body);
+    toStderr = true;
+  } else writeAtomic(outTarget, body);
+  const say = toStderr ? io.stderr : io.stdout;
+  const s = data.summary;
+  say(`${outTarget ? `Wrote ${a.out ?? basename2(outTarget)}: ` : ""}${s.open} open finding${s.open === 1 ? "" : "s"} (${s.highCritical} high/critical), ${s.resolved} resolved, across ${roots.length} repositor${roots.length === 1 ? "y" : "ies"}
+`);
+  const failed = options.failOn !== "none" && data.findings.some((f) => f.status === "open" && sevRank(f.severity) >= sevRank(options.failOn));
+  return failed ? 1 : 0;
+}
+
 // src/main.ts
 function config(io, a, root) {
   if (a.noRepoConfig) return {};
@@ -6443,30 +7195,30 @@ function repoRoot(io, a, fallback) {
 }
 function baselineLocation(io, a, root) {
   if (!a.baseline) return void 0;
-  const abs = resolve5(io.cwd, a.baseline);
-  const rel = relative(resolve5(root), abs).split(sep2).join("/");
-  return { abs, rel, inRepo: !!rel && !rel.startsWith("..") && !isAbsolute3(rel) };
+  const abs = resolve6(io.cwd, a.baseline);
+  const rel = relative2(resolve6(root), abs).split(sep2).join("/");
+  return { abs, rel, inRepo: !!rel && !rel.startsWith("..") && !isAbsolute4(rel) };
 }
 function withBaseline(io, a, findings, root, fromBase) {
   const loc = baselineLocation(io, a, root);
   if (!loc) return { kept: findings, suppressedByBaseline: 0, notes: [] };
   if (loc.inRepo && a.noRepoConfig) return { kept: findings, suppressedByBaseline: 0, notes: [`ignored baseline ${a.baseline}: it is inside the repository and --no-repo-config was given`] };
-  let text;
+  let text2;
   const notes = [];
   if (fromBase && loc.inRepo) {
-    text = fromBase.baseFiles[loc.rel];
-    if (text === void 0) return { kept: findings, suppressedByBaseline: 0, notes: [`baseline ${loc.rel} does not exist at the base revision (${fromBase.commit.slice(0, 8)}); no baseline applied. A baseline added by the change itself is never trusted.`] };
+    text2 = fromBase.baseFiles[loc.rel];
+    if (text2 === void 0) return { kept: findings, suppressedByBaseline: 0, notes: [`baseline ${loc.rel} does not exist at the base revision (${fromBase.commit.slice(0, 8)}); no baseline applied. A baseline added by the change itself is never trusted.`] };
     notes.push(`baseline ${loc.rel} read from the base revision ${fromBase.commit.slice(0, 8)}, not from the head`);
   } else {
     try {
-      text = readFileSync7(loc.abs, "utf8");
+      text2 = readFileSync7(loc.abs, "utf8");
     } catch {
       throw new CliError(`cannot read baseline file: ${a.baseline}`);
     }
   }
   let b;
   try {
-    b = parseBaseline(text);
+    b = parseBaseline(text2);
   } catch (e) {
     if (e instanceof BaselineError) throw new CliError(`${a.baseline}: ${e.message}`);
     throw e;
@@ -6494,7 +7246,7 @@ async function cmdBaselineCreate(io, a) {
   const cfg = config(io, a, root);
   const res = scanDirectory(root, { config: cfg, userHome: a.includeUserConfigs && io.homedir ? io.homedir : void 0 });
   const findings = res.findings.filter((f) => passesConfidence(f, a.minConfidence));
-  const file = join7(root, BASELINE_FILE);
+  const file = join9(root, BASELINE_FILE);
   try {
     writeFileSync4(file, serializeBaseline(createBaseline(findings)));
   } catch (e) {
@@ -6518,15 +7270,15 @@ function discoverAll(io, a, root) {
   return files;
 }
 function readLock(io, root) {
-  const file = join7(root, LOCK_FILE);
-  let text;
+  const file = join9(root, LOCK_FILE);
+  let text2;
   try {
-    text = readFileSync7(file, "utf8");
+    text2 = readFileSync7(file, "utf8");
   } catch {
     throw new CliError(`no lock file at ${LOCK_FILE} (create one with: ${PRODUCT.id} lock <path>)`);
   }
   try {
-    return parseLock(text);
+    return parseLock(text2);
   } catch (e) {
     if (e instanceof LockError) throw new CliError(`${LOCK_FILE}: ${e.message}`);
     throw e;
@@ -6540,13 +7292,13 @@ async function cmdLock(io, a) {
   let drift = { changed: 0, added: 0, removed: 0 };
   let hadLock = false;
   try {
-    const prev = parseLock(readFileSync7(join7(root, LOCK_FILE), "utf8"));
+    const prev = parseLock(readFileSync7(join9(root, LOCK_FILE), "utf8"));
     hadLock = true;
     drift = verifyLock(prev, files).counts;
   } catch {
   }
   try {
-    writeFileSync4(join7(root, LOCK_FILE), serializeLock(lock));
+    writeFileSync4(join9(root, LOCK_FILE), serializeLock(lock));
   } catch (e) {
     throw new CliError(`cannot write ${LOCK_FILE}: ${e.message}`);
   }
@@ -6565,7 +7317,25 @@ async function cmdLock(io, a) {
 async function cmdVerify(io, a) {
   const given = a.pos[0] ?? ".";
   const root = repoRoot(io, a, given);
-  const lock = readLock(io, root);
+  const notes = [];
+  let lock;
+  if (a.lockFrom !== void 0) {
+    let rf;
+    try {
+      rf = readFileAtRevision(root, a.lockFrom, LOCK_FILE, { useMergeBase: !a.noMergeBase });
+    } catch (e) {
+      if (e instanceof GitError) throw new CliError(e.message);
+      throw e;
+    }
+    if (rf.text === void 0) throw new CliError(`no lock file ${LOCK_FILE} at ${a.lockFrom} (${rf.commit.slice(0, 8)}); nothing to verify against. A lock added by the change itself is never trusted: create it on the base branch first`);
+    try {
+      lock = parseLock(rf.text);
+    } catch (e) {
+      if (e instanceof LockError) throw new CliError(`${LOCK_FILE} at ${a.lockFrom}: ${e.message}`);
+      throw e;
+    }
+    notes.push(...rf.notes, `lock read from the base revision ${rf.commit.slice(0, 8)}, not from the working tree`);
+  } else lock = readLock(io, root);
   const files = discoverAll(io, a, root);
   const v = verifyLock(lock, files);
   const b = withBaseline(io, a, v.findings.filter((f) => passesConfidence(f, a.minConfidence)), root);
@@ -6576,7 +7346,7 @@ async function cmdVerify(io, a) {
     suppressedByConfig: 0,
     suppressedByBaseline: b.suppressedByBaseline,
     forceFail: b.kept.length > 0,
-    notes: b.notes,
+    notes: [...notes, ...b.notes],
     extra: { lock: { file: LOCK_FILE, entries: v.entries, drift: v.counts } }
   };
   return finish2(io, a, o);
@@ -6676,6 +7446,8 @@ async function run(argv, io) {
         return await cmdLock(io, a);
       case "verify":
         return await cmdVerify(io, a);
+      case "report":
+        return await cmdReport(io, a);
       default:
         throw new CliError(`${a.command} is not implemented yet`);
     }
